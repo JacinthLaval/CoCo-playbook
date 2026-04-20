@@ -165,9 +165,9 @@
 <section>
   <h2><span class="icon">&#128200;</span> By the Numbers</h2>
   <div class="stat-row">
-    <div class="stat-box"><div class="number blue">8</div><div class="label">Full Applications</div></div>
-    <div class="stat-box"><div class="number green">5</div><div class="label">SPCS Services Deployed</div></div>
-    <div class="stat-box"><div class="number gold">3</div><div class="label">ML Models Trained</div></div>
+    <div class="stat-box"><div class="number blue">10</div><div class="label">Full Applications</div></div>
+    <div class="stat-box"><div class="number green">8</div><div class="label">SPCS Services Deployed</div></div>
+    <div class="stat-box"><div class="number gold">4</div><div class="label">ML Models Trained</div></div>
     <div class="stat-box"><div class="number purple">3</div><div class="label">Cortex Agents</div></div>
     <div class="stat-box"><div class="number blue">5</div><div class="label">Skills Created</div></div>
     <div class="stat-box"><div class="number red">3.4M+</div><div class="label">Clinical Records</div></div>
@@ -243,6 +243,22 @@
       <div class="tl-title">FHIR Ingestion Manager</div>
       <div class="tl-desc">Full interoperability pipeline — Snowflake Postgres landing zone, React SPCS app, FHIR/HL7v2/CSV parsers, OMOP transform, quality scoring (92.3% completeness), PG auto-suspend system</div>
       <div class="tl-tags"><span class="tl-tag spcs">SPCS</span><span class="tl-tag">Snowflake Postgres</span><span class="tl-tag">FHIR/HL7v2</span><span class="tl-tag">UDTFs</span></div>
+    </div>
+
+    <div class="tl-item active">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Week 6 &mdash; Mid-April</div>
+      <div class="tl-title">OncoLook Digital Pathology Platform</div>
+      <div class="tl-desc">GPU-accelerated histopathology inference (ResNet18 + Grad-CAM) on SPCS, Streamlit pathologist UI with FHIR patient lookup, React Admin with FDA doc generator, 21 CFR Part 11 audit trail, model registry — 3 SPCS services</div>
+      <div class="tl-tags"><span class="tl-tag gpu">GPU (A10G)</span><span class="tl-tag spcs">SPCS &times;3</span><span class="tl-tag ml">Deep Learning</span><span class="tl-tag">FHIR</span><span class="tl-tag gov">FDA 21 CFR 11</span></div>
+    </div>
+
+    <div class="tl-item active">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Week 6 &mdash; April</div>
+      <div class="tl-title">Ambient Clinical Scribe</div>
+      <div class="tl-desc">Real-time clinical transcription — faster-whisper large-v3 on GPU, Cortex AI_COMPLETE SOAP note generation, ICD-10 coding, PGx alerts, FHIR summary export, encounter audio archival</div>
+      <div class="tl-tags"><span class="tl-tag gpu">GPU (T4)</span><span class="tl-tag spcs">SPCS</span><span class="tl-tag ml">Whisper large-v3</span><span class="tl-tag">Cortex AI</span></div>
     </div>
 
     <div class="tl-item active">
@@ -332,6 +348,26 @@
       </div>
     </div>
 
+    <div class="project-card red">
+      <div class="p-icon">&#128300;</div>
+      <h4>OncoLook Digital Pathology</h4>
+      <p>GPU-accelerated histopathology analysis platform. ResNet18 + Grad-CAM inference on SPCS, Streamlit pathologist UI with FHIR patient lookup, React Admin with FDA regulatory doc generator and live Snowflake analytics.</p>
+      <div class="p-stats">
+        <strong>3</strong> SPCS services &bull; GPU A10G &bull; <strong>500</strong> WSI tiles &bull; <strong>50</strong> patients<br>
+        Model registry &bull; 21 CFR Part 11 audit &bull; FHIR patient context &bull; Grad-CAM heatmaps
+      </div>
+    </div>
+
+    <div class="project-card accent">
+      <div class="p-icon">&#127908;</div>
+      <h4>Ambient Clinical Scribe</h4>
+      <p>Real-time clinical transcription service — faster-whisper large-v3 on GPU with Cortex AI_COMPLETE for structured note generation. SOAP notes, ICD-10 codes, medication review, PGx alerts, and FHIR-formatted summaries.</p>
+      <div class="p-stats">
+        <strong>faster-whisper</strong> large-v3 &bull; GPU T4 &bull; Cortex AI_COMPLETE<br>
+        SOAP &bull; ICD-10 &bull; PGx alerts &bull; FHIR export &bull; Audio archival
+      </div>
+    </div>
+
     <div class="project-card green">
       <div class="p-icon">&#128737;</div>
       <h4>Agent Guardrails + Governance</h4>
@@ -351,12 +387,12 @@
   <p>These projects exercised a broad cross-section of the Snowflake platform:</p>
   <table>
     <tr><th>Category</th><th>Features Used</th></tr>
-    <tr><td><strong>Compute</strong></td><td>Snowpark Container Services (5 services, 3 compute pools), GPU (A10G), Warehouses, Snowflake Postgres</td></tr>
-    <tr><td><strong>AI / ML</strong></td><td>Cortex Agents (3), Cortex Analyst, Semantic Views, Cortex Search, Model Registry, PyTorch training</td></tr>
-    <tr><td><strong>Data</strong></td><td>OMOP CDM, FHIR R4, HL7v2, Knowledge Graphs, Dynamic Tables, Streams, Tasks, Stages</td></tr>
+    <tr><td><strong>Compute</strong></td><td>Snowpark Container Services (8 services, 3 compute pools), GPU (A10G, T4), Warehouses, Snowflake Postgres</td></tr>
+    <tr><td><strong>AI / ML</strong></td><td>Cortex Agents (3), Cortex Analyst, Semantic Views, Cortex Search, Model Registry, PyTorch training, faster-whisper, Cortex AI_COMPLETE</td></tr>
+    <tr><td><strong>Data</strong></td><td>OMOP CDM, FHIR R4, HL7v2, Digital Pathology (WSI), Knowledge Graphs, Dynamic Tables, Streams, Tasks, Stages</td></tr>
     <tr><td><strong>Governance</strong></td><td>Row Access Policies, Masking Policies, Tags, RBAC roles, Audit trails, Secure Views</td></tr>
     <tr><td><strong>Integration</strong></td><td>External Access Integrations, Network Rules, Service Functions, MCP Server, Docker Registry</td></tr>
-    <tr><td><strong>Apps</strong></td><td>React (5 SPAs), React Native, Streamlit, Flask backends, nginx reverse proxy</td></tr>
+    <tr><td><strong>Apps</strong></td><td>React (6 SPAs), React Native, Streamlit (2), Flask backends, nginx reverse proxy</td></tr>
   </table>
 </section>
 
