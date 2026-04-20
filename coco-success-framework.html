@@ -461,8 +461,8 @@
     Not a specific use case — a way of working.
   </p>
   <div class="hero-quote">
-    <p>"It's a super complex mess of data with semantic layer intertwined in the complexity today."</p>
-    <cite>— Maria Liu, Director of Data Governance, Partner Healthcare</cite>
+    <p>"Every organization we've worked with has the same problem — the data is there, the definitions aren't."</p>
+    <cite>— Pattern observed across healthcare, financial services, and public sector engagements</cite>
   </div>
 </div>
 
@@ -503,9 +503,10 @@
 <section>
   <div class="container">
     <div class="section-label">The Insight</div>
-    <h2 class="section-title">The win at Partner wasn't the <span>semantic layer</span>.<br>It was the <span>process</span> that found it.</h2>
+    <h2 class="section-title">The win is never the <span>specific deliverable</span>.<br>It's the <span>process</span> that finds it.</h2>
     <p class="section-subtitle">
-      A governance lead said "our semantics suck." That's the signal. Everything after that is
+      A governance lead says "our semantics are a mess." A CISO says "we can't pass an audit." 
+      An analytics lead says "it takes 3 weeks to get a new metric." That's the signal. Everything after that is
       a repeatable pattern: investigate the mess, quantify it, build a plan, establish what "before" 
       looks like, then unleash CoCo to build the "after." The domain changes. The framework doesn't.
     </p>
@@ -564,11 +565,11 @@
     </div>
 
     <div class="case-study">
-      <h4>Partner Healthcare — How it started</h4>
+      <h4>Real-world example — How it starts</h4>
       <p>
-        Maria Liu, Director of Data Governance, said it plainly on a call: <strong>"It's a super complex 
-        mess of data with semantic layer intertwined in the complexity today."</strong> That one sentence 
-        launched the engagement. The signal was governance-level frustration with 13+ source systems, 
+        A Director of Data Governance at a large health system said it plainly on a call: <strong>"It's a 
+        super complex mess of data with semantic layers intertwined in the complexity."</strong> That one sentence 
+        launched the engagement. The signal was governance-level frustration with multiple source systems, 
         every team building their own mart, and metrics diverging before meetings ended.
       </p>
     </div>
@@ -620,13 +621,13 @@
     </div>
 
     <div class="case-study">
-      <h4>Partner Healthcare — What we found</h4>
+      <h4>Real-world example — What investigation reveals</h4>
       <p>
-        We ran Partner's <strong>31 LookML projects</strong> through an extraction engine. In 5-10 minutes: 
-        <strong>1,200+ table structures, 30K+ defined fields, 233 real conflicts</strong>. Two explores with 
-        157 identical fields — zero reason for both to exist. A Length of Stay field returning 
-        <strong>days in one mart and minutes in another</strong> (a 4,320x difference). "Provider" defined 
-        four different ways across four source systems. The numbers told the story — no opinions needed.
+        At a large health system, CoCo parsed dozens of LookML projects in minutes: 
+        <strong>1,000+ table structures, tens of thousands of defined fields, hundreds of real conflicts</strong>. 
+        Duplicate explores with identical fields — zero reason for both to exist. Key metrics like 
+        Length of Stay returning <strong>completely different units across marts</strong>. Core entities like 
+        "Provider" defined multiple ways across source systems. The numbers told the story — no opinions needed.
       </p>
     </div>
   </div>
@@ -677,14 +678,14 @@
     </div>
 
     <div class="case-study">
-      <h4>Partner Healthcare — The plan</h4>
+      <h4>Real-world example — Structuring the plan</h4>
       <p>
-        Three phases: <strong>Weeks 1-4</strong> — deploy pharm & finance semantic views (202 ready to go), 
-        merge duplicate explores, Cortex Analyst live on migrated layer. <strong>Months 2-3</strong> — remaining 
-        29 LookML projects migrated, 800+ conflicting fields resolved, Provider unified across 4 sources. 
-        <strong>Q3</strong> — MDM golden record on clean semantic foundation. The quick wins (373 fields already 
-        identical across marts) ship immediately. The 233 conflicts get sequenced by schema — 73% live 
-        in the clinical project family, so you start there.
+        A typical three-phase approach: <strong>Weeks 1-4</strong> — deploy semantic views for the cleanest schemas 
+        first, merge duplicates, get Cortex Analyst live on the migrated layer. <strong>Months 2-3</strong> — migrate 
+        remaining projects, resolve conflicting field definitions, unify core entities across sources. 
+        <strong>Quarter 3</strong> — build toward MDM on a clean semantic foundation. Quick wins (fields already 
+        identical across marts) ship immediately. Conflicts get sequenced by schema — start where the 
+        highest concentration lives.
       </p>
     </div>
   </div>
@@ -734,12 +735,12 @@
     </div>
 
     <div class="case-study">
-      <h4>Partner Healthcare — The baseline</h4>
+      <h4>Real-world example — Capturing the baseline</h4>
       <p>
-        <strong>233 conflicts</strong> across 30K+ fields. <strong>2 duplicate explores</strong> with 100% identical 
-        definitions (157 fields each). Length of Stay returning <strong>days vs. minutes</strong> depending on 
-        which mart you queried. "Provider" defined <strong>4 different ways</strong> across Salesforce, Epic, SRS, 
-        and NPPES. <strong>73%</strong> of all conflicts concentrated in the clinical project family. These numbers 
+        <strong>Hundreds of conflicts</strong> across tens of thousands of fields. Duplicate objects with identical 
+        definitions that nobody knew about. Key clinical metrics returning <strong>different units</strong> depending on 
+        which mart you queried. Core entities defined <strong>multiple ways</strong> across source systems. 
+        The majority of conflicts concentrated in one project family. These numbers 
         became the "before" that every subsequent milestone measured against.
       </p>
     </div>
@@ -791,12 +792,12 @@
     </div>
 
     <div class="case-study">
-      <h4>Partner Healthcare — The result</h4>
+      <h4>Real-world example — Shipping the result</h4>
       <p>
-        <strong>1,871 semantic views</strong> extracted from LookML — across every schema, zero code written. 
-        <strong>202 views</strong> ready to deploy immediately (pharm, finance, managed care). <strong>373 fields</strong> 
-        already identical across marts — deployed same day, no meeting needed. A live validation test: 
-        pick one Looker dashboard Maria's team uses today, deploy the semantic views, point Cortex 
+        <strong>Thousands of semantic views</strong> extracted from legacy BI — across every schema, zero code written. 
+        <strong>Hundreds of views</strong> ready to deploy immediately across the cleanest domains. <strong>Identical fields</strong> 
+        across marts deployed same day — no meeting needed. The live validation test: 
+        pick a dashboard the governance team uses today, deploy the semantic views, point Cortex 
         Analyst at the same data, ask the same questions in plain English. <strong>If the numbers match, 
         the migration is proven.</strong>
       </p>
@@ -905,7 +906,7 @@
         <h4>Measure the before, celebrate the after</h4>
         <ul>
           <li>Capture concrete baseline metrics before building</li>
-          <li>"233 conflicts → 0" is a story that sells itself</li>
+          <li>"Hundreds of conflicts → 0" is a story that sells itself</li>
           <li>Every checkpoint shows progress against baseline</li>
           <li>Customer presents the delta to their leadership</li>
         </ul>
@@ -924,7 +925,7 @@
         <h4>Quick wins build momentum</h4>
         <ul>
           <li>Ship the easy stuff in days, not weeks</li>
-          <li>373 identical fields deploy today — no meeting needed</li>
+          <li>Identical fields deploy today — no meeting needed</li>
           <li>Each win earns trust for the harder work ahead</li>
           <li>Sequence: easy → medium → hard → strategic</li>
         </ul>
