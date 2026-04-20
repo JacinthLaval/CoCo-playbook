@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The CoCo Framework — Repeatable Success with Cortex Code</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #29B5E8;
+    --blue-dark: #1a9fd4;
+    --navy: #0d2b45;
+    --slate-900: #0f172a;
+    --slate-800: #1e293b;
+    --slate-700: #334155;
+    --slate-500: #64748b;
+    --slate-400: #94a3b8;
+    --slate-200: #e2e8f0;
+    --slate-100: #f1f5f9;
+    --slate-50: #f8fafc;
+    --green: #10b981;
+    --green-light: #ecfdf5;
+    --amber: #f59e0b;
+    --amber-light: #fffbeb;
+    --red: #ef4444;
+    --red-light: #fef2f2;
+    --pink: #ec4899;
+    --purple: #8b5cf6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--slate-700);
+    line-height: 1.6;
+    background: var(--slate-50);
+  }
+
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #163a5c 50%, var(--blue-dark) 100%);
+    color: white;
+    padding: 80px 40px 60px;
+    text-align: center;
+  }
+
+  .hero-label {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--blue);
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 span { color: var(--blue); }
+
+  .hero .subtitle {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.75);
+    max-width: 680px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+  }
+
+  .hero-quote {
+    background: rgba(255,255,255,0.08);
+    border-left: 3px solid var(--blue);
+    padding: 20px 24px;
+    max-width: 640px;
+    margin: 0 auto;
+    border-radius: 0 12px 12px 0;
+    text-align: left;
+  }
+
+  .hero-quote p {
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 8px;
+  }
+
+  .hero-quote cite {
+    font-size: 0.8rem;
+    color: var(--blue);
+    font-style: normal;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  section {
+    padding: 64px 0;
+  }
+
+  section + section {
+    border-top: 1px solid var(--slate-200);
+  }
+
+  .section-label {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--slate-900);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .section-title span { color: var(--blue); }
+
+  .section-subtitle {
+    font-size: 1.05rem;
+    color: var(--slate-500);
+    margin-bottom: 32px;
+    max-width: 720px;
+  }
+
+  /* ── Overview strip ── */
+  .overview-strip {
+    background: white;
+    border-top: 1px solid var(--slate-200);
+    border-bottom: 1px solid var(--slate-200);
+    padding: 40px 0;
+  }
+
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+  }
+
+  .overview-step {
+    text-align: center;
+    padding: 0 16px;
+    position: relative;
+  }
+
+  .overview-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 20%;
+    height: 60%;
+    width: 1px;
+    background: var(--slate-200);
+  }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .step-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--slate-800);
+    margin-bottom: 4px;
+  }
+
+  .step-verb {
+    font-size: 0.75rem;
+    color: var(--slate-400);
+  }
+
+  /* ── Phase cards ── */
+  .phase-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--slate-200);
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .phase-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .phase-icon.discover { background: #e0f4fd; }
+  .phase-icon.investigate { background: #fef3c7; }
+  .phase-icon.plan { background: #ede9fe; }
+  .phase-icon.baseline { background: #fce7f3; }
+  .phase-icon.execute { background: var(--green-light); }
+
+  .phase-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--slate-900);
+  }
+
+  .phase-subtitle {
+    font-size: 0.85rem;
+    color: var(--slate-500);
+  }
+
+  .phase-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .phase-what h4, .phase-how h4 {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--slate-400);
+    margin-bottom: 10px;
+  }
+
+  .phase-what ul, .phase-how ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .phase-what li, .phase-how li {
+    font-size: 0.88rem;
+    color: var(--slate-700);
+    padding: 6px 0;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .phase-what li::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    color: var(--blue);
+    font-weight: 700;
+    font-family: monospace;
+  }
+
+  .phase-how li::before {
+    content: '$';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 700;
+    font-family: monospace;
+  }
+
+  .coco-cmd {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.82rem;
+    background: var(--slate-100);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--slate-800);
+  }
+
+  /* ── Example cards ── */
+  .example-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .example-card {
+    background: white;
+    border-radius: 14px;
+    border: 1px solid var(--slate-200);
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .example-card .tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  .tag.governance { background: #dbeafe; color: #1d4ed8; }
+  .tag.clinical { background: #fce7f3; color: #be185d; }
+  .tag.migration { background: #fef3c7; color: #92400e; }
+  .tag.analytics { background: #ede9fe; color: #6d28d9; }
+  .tag.devops { background: var(--green-light); color: #065f46; }
+  .tag.ai { background: #e0f4fd; color: #0369a1; }
+
+  .example-card h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--slate-900);
+    margin-bottom: 6px;
+  }
+
+  .example-card p {
+    font-size: 0.82rem;
+    color: var(--slate-500);
+    line-height: 1.5;
+  }
+
+  /* ── Callout boxes ── */
+  .callout {
+    background: linear-gradient(135deg, #e0f4fd 0%, #f0fdf4 100%);
+    border: 1px solid rgba(41,181,232,0.2);
+    border-radius: 14px;
+    padding: 28px;
+    margin: 32px 0;
+  }
+
+  .callout h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--slate-900);
+    margin-bottom: 8px;
+  }
+
+  .callout p {
+    font-size: 0.9rem;
+    color: var(--slate-700);
+    line-height: 1.6;
+  }
+
+  /* ── Anti-patterns ── */
+  .anti-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 24px;
+  }
+
+  .anti-card {
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 0.88rem;
+  }
+
+  .anti-card.bad {
+    background: var(--red-light);
+    border: 1px solid #fecaca;
+  }
+
+  .anti-card.good {
+    background: var(--green-light);
+    border: 1px solid #bbf7d0;
+  }
+
+  .anti-card h4 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .anti-card.bad h4 { color: var(--red); }
+  .anti-card.good h4 { color: var(--green); }
+
+  .anti-card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .anti-card li {
+    padding: 3px 0;
+    color: var(--slate-700);
+    font-size: 0.82rem;
+  }
+
+  .anti-card.bad li::before { content: '✗ '; color: var(--red); font-weight: 700; }
+  .anti-card.good li::before { content: '✓ '; color: var(--green); font-weight: 700; }
+
+  /* ── Partner case study sidebar ── */
+  .case-study {
+    background: white;
+    border-radius: 14px;
+    border-left: 4px solid var(--blue);
+    padding: 24px;
+    margin-top: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .case-study h4 {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--blue);
+    margin-bottom: 8px;
+  }
+
+  .case-study p {
+    font-size: 0.85rem;
+    color: var(--slate-700);
+    line-height: 1.6;
+  }
+
+  .case-study strong { color: var(--slate-900); }
+
+  /* ── Footer ── */
+  .footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.6);
+    padding: 40px;
+    text-align: center;
+    font-size: 0.8rem;
+  }
+
+  .footer strong { color: var(--blue); }
+
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 2rem; }
+    .overview-grid { grid-template-columns: 1fr; gap: 20px; }
+    .overview-step:not(:last-child)::after { display: none; }
+    .phase-body { grid-template-columns: 1fr; }
+    .example-grid { grid-template-columns: 1fr; }
+    .anti-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════ HERO -->
+<div class="hero">
+  <div class="hero-label">The Repeatable Pattern</div>
+  <h1>The <span>CoCo</span> Framework</h1>
+  <p class="subtitle">
+    Five phases to turn any messy data problem into a governed, deployed solution.
+    Not a specific use case — a way of working.
+  </p>
+  <div class="hero-quote">
+    <p>"It's a super complex mess of data with semantic layer intertwined in the complexity today."</p>
+    <cite>— Maria Liu, Director of Data Governance, Partner Healthcare</cite>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ OVERVIEW STRIP -->
+<div class="overview-strip">
+  <div class="container">
+    <div class="overview-grid">
+      <div class="overview-step">
+        <div class="step-num">1</div>
+        <div class="step-name">Discover</div>
+        <div class="step-verb">Listen for the signal</div>
+      </div>
+      <div class="overview-step">
+        <div class="step-num">2</div>
+        <div class="step-name">Investigate</div>
+        <div class="step-verb">Gather the evidence</div>
+      </div>
+      <div class="overview-step">
+        <div class="step-num">3</div>
+        <div class="step-name">Plan</div>
+        <div class="step-verb">Lay it out</div>
+      </div>
+      <div class="overview-step">
+        <div class="step-num">4</div>
+        <div class="step-name">Baseline</div>
+        <div class="step-verb">Establish the before</div>
+      </div>
+      <div class="overview-step">
+        <div class="step-num">5</div>
+        <div class="step-name">Execute</div>
+        <div class="step-verb">Ship the after</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ THE INSIGHT -->
+<section>
+  <div class="container">
+    <div class="section-label">The Insight</div>
+    <h2 class="section-title">The win at Partner wasn't the <span>semantic layer</span>.<br>It was the <span>process</span> that found it.</h2>
+    <p class="section-subtitle">
+      A governance lead said "our semantics suck." That's the signal. Everything after that is
+      a repeatable pattern: investigate the mess, quantify it, build a plan, establish what "before" 
+      looks like, then unleash CoCo to build the "after." The domain changes. The framework doesn't.
+    </p>
+
+    <div class="callout">
+      <h3>The pattern works because CoCo is not a single tool — it's a workbench.</h3>
+      <p>
+        Skills, search, SQL execution, file generation, deployment orchestration, Cortex Analyst, 
+        semantic views, agents — they're all available. The framework tells you <em>when</em> to 
+        reach for each one. Your job is to bring the business context. CoCo handles the execution surface.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════ PHASE 1 -->
+<section>
+  <div class="container">
+    <div class="section-label">Phase 1</div>
+    <h2 class="section-title"><span>Discover</span> — Listen for the signal</h2>
+    <p class="section-subtitle">
+      Every successful engagement starts with someone saying something is broken. 
+      Your job is to hear the real problem behind the complaint.
+    </p>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <div class="phase-icon discover">🎯</div>
+        <div>
+          <div class="phase-title">Find the pain</div>
+          <div class="phase-subtitle">The signal is never "we need a semantic layer." It's a symptom.</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-what">
+          <h4>Signals to listen for</h4>
+          <ul>
+            <li>"Nobody agrees on the numbers"</li>
+            <li>"Every team has their own mart"</li>
+            <li>"The report says X but finance says Y"</li>
+            <li>"We can't trust the data"</li>
+            <li>"It takes 3 weeks to get a new metric"</li>
+            <li>"Our semantics suck" (direct hit)</li>
+          </ul>
+        </div>
+        <div class="phase-how">
+          <h4>What you're really identifying</h4>
+          <ul>
+            <li>Who owns the problem? (governance lead, CDO, analyst team lead)</li>
+            <li>What's the blast radius? (one team? every dashboard?)</li>
+            <li>Is there existing artifacts? (LookML, dbt, YAML, Excel dictionaries)</li>
+            <li>What's the political landscape? (who will resist, who will champion)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-study">
+      <h4>Partner Healthcare — How it started</h4>
+      <p>
+        Maria Liu, Director of Data Governance, said it plainly on a call: <strong>"It's a super complex 
+        mess of data with semantic layer intertwined in the complexity today."</strong> That one sentence 
+        launched the engagement. The signal was governance-level frustration with 13+ source systems, 
+        every team building their own mart, and metrics diverging before meetings ended.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════ PHASE 2 -->
+<section>
+  <div class="container">
+    <div class="section-label">Phase 2</div>
+    <h2 class="section-title"><span>Investigate</span> — Gather the evidence</h2>
+    <p class="section-subtitle">
+      Don't guess. Get the actual artifacts. Feed them to CoCo. Let it quantify the mess 
+      so you can show the customer exactly what's broken — with numbers, not opinions.
+    </p>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <div class="phase-icon investigate">🔍</div>
+        <div>
+          <div class="phase-title">Get the raw material</div>
+          <div class="phase-subtitle">Whatever they have — LookML, YAML, SQL, CSV, Access DBs, tribal knowledge.</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-what">
+          <h4>Common input types</h4>
+          <ul>
+            <li>LookML projects (views, explores, dashboards)</li>
+            <li>dbt models (YAML schema files, SQL models)</li>
+            <li>Existing semantic models / YAML files</li>
+            <li>Snowflake data catalog (tables, views, schemas)</li>
+            <li>Excel data dictionaries / Access databases</li>
+            <li>Confluence pages / "the doc someone wrote 3 years ago"</li>
+          </ul>
+        </div>
+        <div class="phase-how">
+          <h4>CoCo actions</h4>
+          <ul>
+            <li>Parse and extract definitions from raw files</li>
+            <li>Use <span class="coco-cmd">snowflake_object_search</span> to catalog what exists</li>
+            <li>Run SQL to profile tables, count rows, check freshness</li>
+            <li>Cross-reference definitions to find conflicts and duplicates</li>
+            <li>Use relevant skills (semantic-view, data-governance, data-quality)</li>
+            <li>Quantify: "X conflicts, Y duplicates, Z orphaned fields"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-study">
+      <h4>Partner Healthcare — What we found</h4>
+      <p>
+        We ran Partner's <strong>31 LookML projects</strong> through an extraction engine. In 5-10 minutes: 
+        <strong>1,200+ table structures, 30K+ defined fields, 233 real conflicts</strong>. Two explores with 
+        157 identical fields — zero reason for both to exist. A Length of Stay field returning 
+        <strong>days in one mart and minutes in another</strong> (a 4,320x difference). "Provider" defined 
+        four different ways across four source systems. The numbers told the story — no opinions needed.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════ PHASE 3 -->
+<section>
+  <div class="container">
+    <div class="section-label">Phase 3</div>
+    <h2 class="section-title"><span>Plan</span> — Lay it out before you build</h2>
+    <p class="section-subtitle">
+      CoCo has a plan system for a reason. Use it. Break the work into phases, 
+      identify quick wins, and sequence the hard stuff after the easy wins are shipped.
+    </p>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <div class="phase-icon plan">📋</div>
+        <div>
+          <div class="phase-title">Structure the work</div>
+          <div class="phase-subtitle">Quick wins first. Hard problems second. Always show progress early.</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-what">
+          <h4>Plan structure</h4>
+          <ul>
+            <li>Prioritize by impact: what's the biggest pain?</li>
+            <li>Identify quick wins: what can deploy in days?</li>
+            <li>Sequence dependencies: what unblocks what?</li>
+            <li>Define "done" for each phase</li>
+            <li>Assign clear validation criteria</li>
+            <li>Plan the baseline measurement (Phase 4)</li>
+          </ul>
+        </div>
+        <div class="phase-how">
+          <h4>CoCo actions</h4>
+          <ul>
+            <li>Use CoCo plan mode to create structured plan files</li>
+            <li>Reference investigation findings to size each task</li>
+            <li>Use TODO tracking for multi-step execution</li>
+            <li>Identify which CoCo skills apply to each task</li>
+            <li>Build the plan in a format the customer can review</li>
+            <li>Generate the deliverable roadmap (HTML, slides, doc)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-study">
+      <h4>Partner Healthcare — The plan</h4>
+      <p>
+        Three phases: <strong>Weeks 1-4</strong> — deploy pharm & finance semantic views (202 ready to go), 
+        merge duplicate explores, Cortex Analyst live on migrated layer. <strong>Months 2-3</strong> — remaining 
+        29 LookML projects migrated, 800+ conflicting fields resolved, Provider unified across 4 sources. 
+        <strong>Q3</strong> — MDM golden record on clean semantic foundation. The quick wins (373 fields already 
+        identical across marts) ship immediately. The 233 conflicts get sequenced by schema — 73% live 
+        in the clinical project family, so you start there.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════ PHASE 4 -->
+<section>
+  <div class="container">
+    <div class="section-label">Phase 4</div>
+    <h2 class="section-title"><span>Baseline</span> — Establish the "before"</h2>
+    <p class="section-subtitle">
+      You cannot prove value without a before. Measure the current state in a way 
+      that's concrete, undeniable, and easy to compare against later.
+    </p>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <div class="phase-icon baseline">📊</div>
+        <div>
+          <div class="phase-title">Measure what matters</div>
+          <div class="phase-subtitle">Pick metrics that the customer cares about, not metrics that make CoCo look good.</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-what">
+          <h4>Baseline metrics by use case</h4>
+          <ul>
+            <li><strong>Semantic/Governance:</strong> # of conflicting definitions, # of orphaned fields, time to answer a question</li>
+            <li><strong>Analytics:</strong> time to build a new metric, # of ticket requests in queue, dashboard trust score</li>
+            <li><strong>Data quality:</strong> # of DMF violations, % of tables monitored, freshness SLA misses</li>
+            <li><strong>AI/ML:</strong> model accuracy, inference latency, time from training to deployment</li>
+            <li><strong>Migration:</strong> # of objects to migrate, % converted, test pass rate</li>
+          </ul>
+        </div>
+        <div class="phase-how">
+          <h4>CoCo actions</h4>
+          <ul>
+            <li>Run the same queries the customer would run — capture the output</li>
+            <li>Screenshot / export the current state of dashboards</li>
+            <li>Use <span class="coco-cmd">data-quality</span> skill to audit current DMF coverage</li>
+            <li>Use <span class="coco-cmd">data-governance</span> skill to snapshot access patterns</li>
+            <li>Generate a baseline report (HTML, Google Doc, or Snowflake table)</li>
+            <li>Store baseline in Snowflake for automated comparison later</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-study">
+      <h4>Partner Healthcare — The baseline</h4>
+      <p>
+        <strong>233 conflicts</strong> across 30K+ fields. <strong>2 duplicate explores</strong> with 100% identical 
+        definitions (157 fields each). Length of Stay returning <strong>days vs. minutes</strong> depending on 
+        which mart you queried. "Provider" defined <strong>4 different ways</strong> across Salesforce, Epic, SRS, 
+        and NPPES. <strong>73%</strong> of all conflicts concentrated in the clinical project family. These numbers 
+        became the "before" that every subsequent milestone measured against.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════ PHASE 5 -->
+<section>
+  <div class="container">
+    <div class="section-label">Phase 5</div>
+    <h2 class="section-title"><span>Execute</span> — Unleash CoCo</h2>
+    <p class="section-subtitle">
+      Now you build. Use CoCo's skills, tools, and deployment capabilities to 
+      ship the solution. Show the delta against baseline at every checkpoint.
+    </p>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <div class="phase-icon execute">🚀</div>
+        <div>
+          <div class="phase-title">Ship, measure, iterate</div>
+          <div class="phase-subtitle">Deploy quick wins fast. Build momentum. Tackle hard problems with confidence.</div>
+        </div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-what">
+          <h4>Execution principles</h4>
+          <ul>
+            <li>Ship the quick wins first — build trust and momentum</li>
+            <li>Use CoCo skills for domain-specific work (semantic-view, dbt, streamlit, etc.)</li>
+            <li>Test everything before declaring victory</li>
+            <li>Show delta against baseline at every checkpoint</li>
+            <li>Document as you go — CoCo memory persists context</li>
+            <li>Let the customer validate: "do these numbers match?"</li>
+          </ul>
+        </div>
+        <div class="phase-how">
+          <h4>CoCo capabilities</h4>
+          <ul>
+            <li><span class="coco-cmd">semantic-view</span> — create, debug, evaluate semantic views</li>
+            <li><span class="coco-cmd">sql-author</span> — write, test, deploy SQL</li>
+            <li><span class="coco-cmd">data-quality</span> — attach DMFs, monitor, alert</li>
+            <li><span class="coco-cmd">cortex-agent</span> — build NL interfaces for analysts</li>
+            <li><span class="coco-cmd">dashboard</span> — create visual proof of value</li>
+            <li><span class="coco-cmd">developing-with-streamlit</span> — build interactive apps</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-study">
+      <h4>Partner Healthcare — The result</h4>
+      <p>
+        <strong>1,871 semantic views</strong> extracted from LookML — across every schema, zero code written. 
+        <strong>202 views</strong> ready to deploy immediately (pharm, finance, managed care). <strong>373 fields</strong> 
+        already identical across marts — deployed same day, no meeting needed. A live validation test: 
+        pick one Looker dashboard Maria's team uses today, deploy the semantic views, point Cortex 
+        Analyst at the same data, ask the same questions in plain English. <strong>If the numbers match, 
+        the migration is proven.</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════ USE CASE EXAMPLES -->
+<section style="background: white;">
+  <div class="container">
+    <div class="section-label">Beyond Semantic Layers</div>
+    <h2 class="section-title">The framework applies to <span>any</span> CoCo engagement</h2>
+    <p class="section-subtitle">
+      The domain changes. The five phases don't. Here's how the same pattern maps to 
+      different starting signals.
+    </p>
+
+    <div class="example-grid">
+      <div class="example-card">
+        <span class="tag governance">Governance</span>
+        <h4>"We don't know who has access to what"</h4>
+        <p>Discover: CISO flags audit risk. Investigate: CoCo runs data-governance skill, 
+        snapshots roles/grants. Plan: prioritize sensitive schemas. Baseline: current grant sprawl. 
+        Execute: masking policies, row access, classification.</p>
+      </div>
+
+      <div class="example-card">
+        <span class="tag clinical">Clinical AI</span>
+        <h4>"We need to deploy a model on our data"</h4>
+        <p>Discover: clinician has a research model. Investigate: CoCo profiles the data, checks GPU 
+        infra. Plan: SPCS service + Streamlit UI + audit trail. Baseline: manual process time. 
+        Execute: containerized inference, live dashboards.</p>
+      </div>
+
+      <div class="example-card">
+        <span class="tag migration">Migration</span>
+        <h4>"We're moving off Teradata/Oracle"</h4>
+        <p>Discover: CFO wants to reduce license spend. Investigate: CoCo parses DDL, maps 
+        dependencies. Plan: table-by-table migration waves. Baseline: object count + query 
+        compatibility. Execute: SnowConvert + validation testing.</p>
+      </div>
+
+      <div class="example-card">
+        <span class="tag analytics">Analytics</span>
+        <h4>"Our analysts are drowning in SQL tickets"</h4>
+        <p>Discover: analytics lead says turnaround is 2 weeks. Investigate: audit JIRA queue, 
+        profile common queries. Plan: semantic views + Cortex Analyst. Baseline: avg ticket 
+        resolution time. Execute: NL query interface, self-service.</p>
+      </div>
+
+      <div class="example-card">
+        <span class="tag devops">Data Pipelines</span>
+        <h4>"Our pipelines break every Monday"</h4>
+        <p>Discover: data eng is firefighting. Investigate: CoCo audits dynamic tables, checks 
+        refresh history. Plan: DMF monitoring + alerting. Baseline: failure count per week. 
+        Execute: quality monitors, circuit breakers, SLA dashboards.</p>
+      </div>
+
+      <div class="example-card">
+        <span class="tag ai">Cortex Agents</span>
+        <h4>"We want an AI assistant for our team"</h4>
+        <p>Discover: team lead wants NL queries. Investigate: CoCo catalogs available tables, 
+        checks semantic coverage. Plan: agent + search service + semantic views. Baseline: 
+        questions that couldn't be answered. Execute: agent + Streamlit chat UI.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════ ANTI-PATTERNS -->
+<section>
+  <div class="container">
+    <div class="section-label">Common Pitfalls</div>
+    <h2 class="section-title">What separates <span>great</span> from mediocre</h2>
+
+    <div class="anti-grid">
+      <div class="anti-card bad">
+        <h4>Skip the investigation</h4>
+        <ul>
+          <li>Jump straight to building without understanding the mess</li>
+          <li>Assume you know the schema from a 5-minute glance</li>
+          <li>Don't quantify the problem — just describe it</li>
+          <li>Ignore existing artifacts (LookML, dbt, docs)</li>
+        </ul>
+      </div>
+      <div class="anti-card good">
+        <h4>Earn the right to build</h4>
+        <ul>
+          <li>Parse every artifact the customer gives you</li>
+          <li>Show them numbers they didn't know about their own data</li>
+          <li>Let the evidence dictate the plan, not assumptions</li>
+          <li>Use CoCo skills to automate the discovery</li>
+        </ul>
+      </div>
+
+      <div class="anti-card bad">
+        <h4>No baseline, no proof</h4>
+        <ul>
+          <li>Build something impressive but can't show the delta</li>
+          <li>"It's better now" without numbers to back it up</li>
+          <li>Customer can't tell stakeholders what changed</li>
+          <li>No before/after to justify the next phase</li>
+        </ul>
+      </div>
+      <div class="anti-card good">
+        <h4>Measure the before, celebrate the after</h4>
+        <ul>
+          <li>Capture concrete baseline metrics before building</li>
+          <li>"233 conflicts → 0" is a story that sells itself</li>
+          <li>Every checkpoint shows progress against baseline</li>
+          <li>Customer presents the delta to their leadership</li>
+        </ul>
+      </div>
+
+      <div class="anti-card bad">
+        <h4>Boil the ocean</h4>
+        <ul>
+          <li>Try to fix everything at once</li>
+          <li>6-month plan with no deliverables until the end</li>
+          <li>Customer loses interest before seeing value</li>
+          <li>Scope creep kills momentum</li>
+        </ul>
+      </div>
+      <div class="anti-card good">
+        <h4>Quick wins build momentum</h4>
+        <ul>
+          <li>Ship the easy stuff in days, not weeks</li>
+          <li>373 identical fields deploy today — no meeting needed</li>
+          <li>Each win earns trust for the harder work ahead</li>
+          <li>Sequence: easy → medium → hard → strategic</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════ KEY TAKEAWAY -->
+<section style="background: linear-gradient(135deg, var(--navy) 0%, #163a5c 100%); color: white; text-align: center;">
+  <div class="container">
+    <div class="section-label" style="color: var(--blue);">The Takeaway</div>
+    <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 16px; color: white;">
+      CoCo doesn't replace your expertise.<br>
+      It <span style="color: var(--blue);">amplifies</span> your process.
+    </h2>
+    <p style="font-size: 1.05rem; color: rgba(255,255,255,0.7); max-width: 640px; margin: 0 auto 32px; line-height: 1.7;">
+      The framework is always the same: hear the signal, investigate the evidence, plan the work, 
+      measure the before, and ship the after. CoCo accelerates every phase — but the human 
+      judgment of <em>which problem to solve</em> and <em>what "good" looks like</em> is yours.
+    </p>
+    <div style="display: inline-flex; gap: 24px; flex-wrap: wrap; justify-content: center;">
+      <div style="background: rgba(255,255,255,0.08); padding: 16px 24px; border-radius: 12px; text-align: left;">
+        <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--blue); margin-bottom: 4px;">Discovery</div>
+        <div style="font-size: 0.9rem; color: white;">5 min conversation</div>
+      </div>
+      <div style="background: rgba(255,255,255,0.08); padding: 16px 24px; border-radius: 12px; text-align: left;">
+        <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--blue); margin-bottom: 4px;">Investigation</div>
+        <div style="font-size: 0.9rem; color: white;">5-10 min with CoCo</div>
+      </div>
+      <div style="background: rgba(255,255,255,0.08); padding: 16px 24px; border-radius: 12px; text-align: left;">
+        <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--blue); margin-bottom: 4px;">Plan + Baseline</div>
+        <div style="font-size: 0.9rem; color: white;">30 min structured</div>
+      </div>
+      <div style="background: rgba(255,255,255,0.08); padding: 16px 24px; border-radius: 12px; text-align: left;">
+        <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--blue); margin-bottom: 4px;">Execution</div>
+        <div style="font-size: 0.9rem; color: white;">Days to weeks, not months</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════ FOOTER -->
+<div class="footer">
+  <p>The CoCo Framework &middot; <strong>Cortex Code</strong> by Snowflake &middot; April 2026</p>
+  <p style="margin-top: 6px;">Built with the same tool it teaches you to use.</p>
+</div>
+
+</body>
+</html>

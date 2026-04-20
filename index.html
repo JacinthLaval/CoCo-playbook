@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoCo Playbook — Patterns for Success with Cortex Code</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: #0a0e1a; color: #e2e8f0; min-height: 100vh; }
+
+  .hero {
+    text-align: center; padding: 80px 24px 60px;
+    background: linear-gradient(135deg, #0a0e1a 0%, #1a1f3a 50%, #0a0e1a 100%);
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at 50% 50%, rgba(41,98,255,0.08) 0%, transparent 50%);
+  }
+  .hero-badge {
+    display: inline-block; background: rgba(41,98,255,0.15); color: #29b5e8;
+    font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    padding: 6px 16px; border-radius: 20px; margin-bottom: 24px; position: relative;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.15;
+    margin-bottom: 16px; position: relative;
+  }
+  .hero h1 span { color: #29b5e8; }
+  .hero p {
+    font-size: 1.15rem; color: #94a3b8; max-width: 600px; margin: 0 auto;
+    line-height: 1.6; position: relative;
+  }
+
+  .cards {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px; max-width: 1100px; margin: 0 auto; padding: 0 24px 80px;
+  }
+
+  .card {
+    background: linear-gradient(145deg, #141828, #1a1f3a);
+    border: 1px solid rgba(41,98,255,0.15); border-radius: 16px;
+    padding: 32px; transition: all 0.3s ease; position: relative; overflow: hidden;
+    text-decoration: none; color: inherit; display: flex; flex-direction: column;
+  }
+  .card:hover {
+    border-color: rgba(41,98,255,0.4); transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(41,98,255,0.12);
+  }
+  .card::after {
+    content: '→'; position: absolute; top: 28px; right: 28px;
+    font-size: 1.5rem; color: #29b5e8; opacity: 0; transition: all 0.3s ease;
+  }
+  .card:hover::after { opacity: 1; transform: translateX(4px); }
+
+  .card-number {
+    width: 40px; height: 40px; border-radius: 10px; display: flex;
+    align-items: center; justify-content: center; font-weight: 700;
+    font-size: 1rem; margin-bottom: 20px;
+  }
+  .card:nth-child(1) .card-number { background: rgba(41,181,232,0.15); color: #29b5e8; }
+  .card:nth-child(2) .card-number { background: rgba(99,102,241,0.15); color: #818cf8; }
+  .card:nth-child(3) .card-number { background: rgba(16,185,129,0.15); color: #34d399; }
+  .card:nth-child(4) .card-number { background: rgba(251,191,36,0.15); color: #fbbf24; }
+
+  .card h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+  .card .subtitle { color: #29b5e8; font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+  .card p { color: #94a3b8; font-size: 0.95rem; line-height: 1.6; flex-grow: 1; }
+
+  .card .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .card .tag {
+    background: rgba(41,98,255,0.1); color: #64748b; font-size: 0.75rem;
+    padding: 4px 10px; border-radius: 6px; font-weight: 500;
+  }
+
+  footer {
+    text-align: center; padding: 40px 24px; border-top: 1px solid rgba(255,255,255,0.06);
+    color: #475569; font-size: 0.85rem;
+  }
+  footer span { color: #29b5e8; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">Snowflake · Cortex Code</div>
+  <h1>The <span>CoCo</span> Playbook</h1>
+  <p>Patterns, frameworks, and case studies for building production-grade solutions with Cortex Code — distilled from real healthcare engagements.</p>
+</div>
+
+<div class="cards">
+
+  <a class="card" href="coco-success-framework.html">
+    <div class="card-number">1</div>
+    <div class="subtitle">Framework</div>
+    <h2>The CoCo Framework — Repeatable Success</h2>
+    <p>The 5-phase pattern for consistently winning with Cortex Code: Discover → Investigate → Plan → Baseline → Execute. Generalized from the Partner Healthcare semantic layer win.</p>
+    <div class="tags">
+      <span class="tag">5-Phase Pattern</span>
+      <span class="tag">Partner Healthcare</span>
+      <span class="tag">Semantic Layer</span>
+    </div>
+  </a>
+
+  <a class="card" href="human_ai_collaboration.html">
+    <div class="card-number">2</div>
+    <div class="subtitle">Case Study</div>
+    <h2>The Human-AI Collaboration Pattern</h2>
+    <p>How one person + CoCo built a complete Mississippi FIMR analytics platform — from raw data to production dashboard — demonstrating the human-AI collaboration model.</p>
+    <div class="tags">
+      <span class="tag">MS FIMR</span>
+      <span class="tag">Human + AI</span>
+      <span class="tag">Full Lifecycle</span>
+    </div>
+  </a>
+
+  <a class="card" href="snowwork_portfolio.html">
+    <div class="card-number">3</div>
+    <div class="subtitle">Portfolio</div>
+    <h2>What One Person + AI Built in Weeks</h2>
+    <p>The complete SnowWork portfolio — every project, architecture, and outcome across healthcare AI, FHIR ingestion, digital pathology, and more. The proof that this approach scales.</p>
+    <div class="tags">
+      <span class="tag">Portfolio</span>
+      <span class="tag">Healthcare AI</span>
+      <span class="tag">SPCS</span>
+    </div>
+  </a>
+
+  <a class="card" href="guardrails-presentation.html">
+    <div class="card-number">4</div>
+    <div class="subtitle">Architecture</div>
+    <h2>Agent Guardrails — Defense in Depth</h2>
+    <p>A defense-in-depth framework for Cortex Agent deployments: read-only roles, SQL validation, human-in-the-loop confirmation, and audit trails for enterprise-grade safety.</p>
+    <div class="tags">
+      <span class="tag">Security</span>
+      <span class="tag">Cortex Agents</span>
+      <span class="tag">RBAC</span>
+    </div>
+  </a>
+
+</div>
+
+<footer>
+  <span>CoCo Playbook</span> · Snowflake Cortex Code · Built with the pattern it describes
+</footer>
+
+</body>
+</html>

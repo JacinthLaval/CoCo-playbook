@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SnowWork Portfolio — What One Person + AI Built in Weeks</title>
+<style>
+  :root {
+    --sf-blue: #1B4F72;
+    --sf-accent: #29B5E8;
+    --sf-light: #EBF5FB;
+    --gold: #d4a017;
+    --red: #C0392B;
+    --green: #27AE60;
+    --warm: #E67E22;
+    --teal: #16a085;
+    --purple: #6C5CE7;
+    --bg: #FAFBFC;
+    --card: #FFFFFF;
+    --text: #2C3E50;
+    --muted: #7F8C8D;
+    --border: #E0E0E0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+  .hero {
+    background: linear-gradient(135deg, #1B4F72 0%, #1a3c5e 40%, #29B5E8 100%);
+    color: white; padding: 64px 40px 48px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 50px;
+    background: var(--bg); clip-path: ellipse(55% 100% at 50% 100%);
+  }
+  .hero h1 { font-size: 2.4em; font-weight: 300; letter-spacing: -0.5px; margin-bottom: 8px; }
+  .hero h1 strong { font-weight: 700; }
+  .hero .subtitle { font-size: 1.1em; opacity: 0.9; max-width: 700px; margin: 0 auto 18px; }
+  .hero .badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .hero .badge {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px; padding: 4px 14px; font-size: 0.8em; backdrop-filter: blur(4px);
+  }
+
+  .container { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 40px 0; }
+  section + section { border-top: 1px solid var(--border); }
+
+  h2 { font-size: 1.45em; color: var(--sf-blue); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  h2 .icon { font-size: 1.1em; }
+  h3 { font-size: 1.05em; color: var(--sf-blue); margin: 20px 0 8px; }
+  p { margin-bottom: 12px; font-size: 0.93em; }
+
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin: 18px 0; }
+  .stat-box {
+    background: var(--card); border-radius: 10px; padding: 16px; text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid var(--border);
+  }
+  .stat-box .number { font-size: 1.9em; font-weight: 800; line-height: 1.1; }
+  .stat-box .number.blue { color: var(--sf-accent); }
+  .stat-box .number.green { color: var(--green); }
+  .stat-box .number.gold { color: var(--gold); }
+  .stat-box .number.red { color: var(--red); }
+  .stat-box .number.purple { color: var(--purple); }
+  .stat-box .label { font-size: 0.78em; color: var(--muted); margin-top: 3px; }
+
+  /* --- TIMELINE --- */
+  .timeline { position: relative; margin: 30px 0 20px 0; padding-left: 38px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 3px;
+    background: linear-gradient(to bottom, var(--sf-accent), var(--sf-blue));
+    border-radius: 3px;
+  }
+  .tl-item { position: relative; margin-bottom: 22px; }
+  .tl-item:last-child { margin-bottom: 0; }
+  .tl-dot {
+    position: absolute; left: -30px; top: 4px; width: 13px; height: 13px;
+    border-radius: 50%; border: 3px solid var(--sf-accent); background: white; z-index: 1;
+  }
+  .tl-item.active .tl-dot { background: var(--sf-accent); }
+  .tl-date { font-size: 0.72em; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .tl-title { font-size: 0.95em; font-weight: 700; color: var(--sf-blue); margin: 2px 0; }
+  .tl-desc { font-size: 0.82em; color: #555; margin: 0; }
+  .tl-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+  .tl-tag {
+    font-size: 0.68em; padding: 2px 8px; border-radius: 10px; font-weight: 600;
+    background: var(--sf-light); color: var(--sf-blue);
+  }
+  .tl-tag.spcs { background: #EDE7F6; color: #6C5CE7; }
+  .tl-tag.ml { background: #FFF3E0; color: #E67E22; }
+  .tl-tag.gov { background: #E8F5E9; color: #27AE60; }
+  .tl-tag.gpu { background: #FCE4EC; color: #C0392B; }
+
+  /* --- PROJECT CARDS --- */
+  .project-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 18px 0; }
+  .project-card {
+    background: var(--card); border-radius: 10px; padding: 22px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid var(--border);
+    border-top: 4px solid var(--sf-blue);
+  }
+  .project-card.accent { border-top-color: var(--sf-accent); }
+  .project-card.green { border-top-color: var(--green); }
+  .project-card.gold { border-top-color: var(--gold); }
+  .project-card.purple { border-top-color: var(--purple); }
+  .project-card.red { border-top-color: var(--red); }
+  .project-card .p-icon { font-size: 1.6em; margin-bottom: 6px; }
+  .project-card h4 { color: var(--sf-blue); margin-bottom: 6px; font-size: 1em; }
+  .project-card p { font-size: 0.82em; color: #555; margin-bottom: 8px; }
+  .project-card .p-stats { font-size: 0.75em; color: var(--muted); }
+  .project-card .p-stats strong { color: var(--sf-blue); }
+  .project-card .p-url { font-size: 0.72em; color: var(--sf-accent); word-break: break-all; }
+
+  .callout {
+    border-left: 4px solid var(--sf-accent); background: var(--sf-light);
+    border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 18px 0; font-size: 0.9em;
+  }
+  .callout strong { color: var(--sf-blue); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.82em; margin: 14px 0; }
+  th { background: var(--sf-blue); color: white; font-weight: 600; text-align: left; padding: 8px 12px; }
+  td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  tr:nth-child(even) { background: #f7f9fc; }
+
+  .cta {
+    background: linear-gradient(135deg, #1B4F72, #29B5E8); color: white;
+    border-radius: 12px; padding: 32px; text-align: center; margin: 30px 0 10px;
+  }
+  .cta h2 { color: white; justify-content: center; margin-bottom: 8px; }
+  .cta p { color: rgba(255,255,255,0.9); font-size: 0.95em; }
+
+  @media (max-width: 700px) {
+    .project-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.8em; }
+    .stat-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- === HERO === -->
+<div class="hero">
+  <h1>What <strong>One Person or a Small Team + SnowWork</strong> Can Build</h1>
+  <p class="subtitle">A portfolio of production-grade applications, ML models, data pipelines, and governance frameworks — built in weeks, not quarters</p>
+  <div class="badges">
+    <span class="badge">Cortex Code (SnowWork)</span>
+    <span class="badge">Snowpark Container Services</span>
+    <span class="badge">Cortex AI</span>
+    <span class="badge">Snowflake Postgres</span>
+    <span class="badge">Healthcare &amp; Life Sciences</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- === WHAT IS SNOWWORK === -->
+<section>
+  <h2><span class="icon">&#9889;</span> What Is SnowWork?</h2>
+  <div class="callout" style="border-left-color: var(--sf-blue); background: linear-gradient(135deg, var(--sf-light) 0%, #fff 100%);">
+    <strong>SnowWork (Cortex Code)</strong> is Snowflake's AI-native development environment — an intelligent coding partner that lives inside Snowflake and understands its entire platform. It writes SQL, Python, JavaScript, and infrastructure code. It deploys containers, trains models, builds governance frameworks, and wires up data pipelines — all through natural-language conversation.<br><br>
+    Think of it as having a senior full-stack engineer, a data architect, and a DevOps specialist sitting beside you — except they know every Snowflake API, never forget context, and work at the speed of thought. You describe what you want; SnowWork figures out <em>how</em> to build it on Snowflake and does it.<br><br>
+    <strong>The result:</strong> One person with cross-functional skills — or a small team of a subject-matter expert and an engineer — can deliver in weeks what traditionally requires large teams and months of sprints. Everything below was built this way.
+  </div>
+</section>
+
+<!-- === BY THE NUMBERS === -->
+<section>
+  <h2><span class="icon">&#128200;</span> By the Numbers</h2>
+  <div class="stat-row">
+    <div class="stat-box"><div class="number blue">8</div><div class="label">Full Applications</div></div>
+    <div class="stat-box"><div class="number green">5</div><div class="label">SPCS Services Deployed</div></div>
+    <div class="stat-box"><div class="number gold">3</div><div class="label">ML Models Trained</div></div>
+    <div class="stat-box"><div class="number purple">3</div><div class="label">Cortex Agents</div></div>
+    <div class="stat-box"><div class="number blue">5</div><div class="label">Skills Created</div></div>
+    <div class="stat-box"><div class="number red">3.4M+</div><div class="label">Clinical Records</div></div>
+  </div>
+</section>
+
+<!-- === VISUAL TIMELINE === -->
+<section>
+  <h2><span class="icon">&#128197;</span> Build Timeline</h2>
+  <p>Each milestone represents working, deployed software — not slides or prototypes.</p>
+
+  <div class="timeline">
+
+    <div class="tl-item active">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Week 1 &mdash; Late February 2026</div>
+      <div class="tl-title">Trusted Research Environment (TRE)</div>
+      <div class="tl-desc">OMOP CDM schema, RBAC (3 roles), dynamic data masking, Streamlit clinical explorer</div>
+      <div class="tl-tags"><span class="tl-tag gov">Governance</span><span class="tl-tag">Streamlit</span><span class="tl-tag">OMOP CDM</span></div>
+    </div>
+
+    <div class="tl-item active">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Week 2 &mdash; Early March</div>
+      <div class="tl-title">Precision Advisor + ER Console</div>
+      <div class="tl-desc">React Native healthcare app with pharmacogenomics, MCP server, Cortex Agent, stored procedures for clinical decision support</div>
+      <div class="tl-tags"><span class="tl-tag spcs">SPCS</span><span class="tl-tag">Cortex Agent</span><span class="tl-tag">MCP Server</span></div>
+    </div>
+
+    <div class="tl-item active">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Week 2&ndash;3 &mdash; March</div>
+      <div class="tl-title">Evo2 Genomic Analysis Service</div>
+      <div class="tl-desc">Arc Institute Evo2-7B foundation model baked into SPCS container, service functions for variant effect scoring</div>
+      <div class="tl-tags"><span class="tl-tag gpu">GPU (A10G)</span><span class="tl-tag spcs">SPCS</span><span class="tl-tag ml">Deep Learning</span></div>
+    </div>
+
+    <div class="tl-item active">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Week 3 &mdash; March</div>
+      <div class="tl-title">cuGraph Variant Similarity</div>
+      <div class="tl-desc">NVIDIA RAPIDS cuGraph on SPCS — Louvain community detection + PageRank across 3,192 patient genotype profiles, 12 pharmacogene variants</div>
+      <div class="tl-tags"><span class="tl-tag gpu">GPU cuGraph</span><span class="tl-tag spcs">SPCS</span><span class="tl-tag">Service Functions</span></div>
+    </div>
+
+    <div class="tl-item active">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Week 3 &mdash; Late March</div>
+      <div class="tl-title">TEFCA Consent Framework</div>
+      <div class="tl-desc">Patient consent portal + QHIN governance broker — Row Access Policies, masking, audit trail. 3 React apps, 8 EHR tables, IACP consent model</div>
+      <div class="tl-tags"><span class="tl-tag gov">Row Access Policy</span><span class="tl-tag">TEFCA QTF v2.0</span><span class="tl-tag">React</span></div>
+    </div>
+
+    <div class="tl-item active">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Week 4 &mdash; Early April</div>
+      <div class="tl-title">Ontology Stack Builder</div>
+      <div class="tl-desc">Full 7-phase ontology-on-Snowflake: 130K knowledge graph nodes, 40 concrete views, 30 abstract views, semantic view, Cortex Agent — all generated from schema discovery</div>
+      <div class="tl-tags"><span class="tl-tag">Knowledge Graph</span><span class="tl-tag">Semantic View</span><span class="tl-tag">Cortex Agent</span></div>
+    </div>
+
+    <div class="tl-item active">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Week 4&ndash;5 &mdash; April</div>
+      <div class="tl-title">MS FIMR: Dashboard + ML + Playbook</div>
+      <div class="tl-desc">County-level infant mortality dashboard on SPCS, multi-modal Transformer (AUROC 0.893), SDOH fusion across 82 counties, Cortex Research Agent with PubMed, executive narrative</div>
+      <div class="tl-tags"><span class="tl-tag ml">PyTorch Transformer</span><span class="tl-tag spcs">SPCS</span><span class="tl-tag">Cortex Agent</span><span class="tl-tag">Semantic View</span></div>
+    </div>
+
+    <div class="tl-item active">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Week 5&ndash;6 &mdash; April</div>
+      <div class="tl-title">FHIR Ingestion Manager</div>
+      <div class="tl-desc">Full interoperability pipeline — Snowflake Postgres landing zone, React SPCS app, FHIR/HL7v2/CSV parsers, OMOP transform, quality scoring (92.3% completeness), PG auto-suspend system</div>
+      <div class="tl-tags"><span class="tl-tag spcs">SPCS</span><span class="tl-tag">Snowflake Postgres</span><span class="tl-tag">FHIR/HL7v2</span><span class="tl-tag">UDTFs</span></div>
+    </div>
+
+    <div class="tl-item active">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Ongoing</div>
+      <div class="tl-title">5 Reusable Skills Created</div>
+      <div class="tl-desc">Agent Guardrails, Synthetic Data Generator, SPCS SPA Auth, SPCS React Agent, Ontology Stack Builder — each captures a repeatable pattern for future builds</div>
+      <div class="tl-tags"><span class="tl-tag">Skill Development</span><span class="tl-tag">Repeatable Patterns</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- === PROJECT CARDS === -->
+<section>
+  <h2><span class="icon">&#128736;</span> The Portfolio</h2>
+
+  <div class="project-grid">
+
+    <div class="project-card accent">
+      <div class="p-icon">&#127973;</div>
+      <h4>MS FIMR AI Platform</h4>
+      <p>Multi-modal infant mortality prediction for Mississippi. React dashboard with county choropleth, racial disparity analysis, and Cortex Research Agent backed by 72M PubMed chunks.</p>
+      <div class="p-stats">
+        <strong>100K</strong> patients &bull; <strong>3.4M</strong> clinical records &bull; <strong>82</strong> counties &bull; AUROC <strong>0.893</strong><br>
+        PyTorch Transformer &bull; SDOH fusion &bull; OMOP CDM v5.4
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="p-icon">&#128257;</div>
+      <h4>FHIR Ingestion Manager</h4>
+      <p>Clinical interoperability pipeline — Snowflake Postgres hot landing zone, FHIR R4 + HL7v2 + CSV ingest, OMOP transform, quality scoring, PG auto-suspend system.</p>
+      <div class="p-stats">
+        <strong>31K</strong> resources &bull; <strong>4K</strong> HL7v2 messages &bull; <strong>8</strong> SPs &bull; <strong>3</strong> UDTFs<br>
+        Completeness <strong>92.3%</strong> &bull; Conformance <strong>99.3%</strong> &bull; Plausibility <strong>99.7%</strong>
+      </div>
+    </div>
+
+    <div class="project-card green">
+      <div class="p-icon">&#128138;</div>
+      <h4>Precision Advisor / ER Console</h4>
+      <p>Clinical decision support with pharmacogenomics. MCP server, Cortex Agent, stored procedures for patient profiling, and Evo2 variant scoring integration.</p>
+      <div class="p-stats">
+        <strong>11.6K</strong> PGx profiles &bull; <strong>17.3B</strong> genomic rows &bull; MCP Server<br>
+        React Native &bull; 4 tabs &bull; Agent + PubMed research
+      </div>
+    </div>
+
+    <div class="project-card purple">
+      <div class="p-icon">&#129516;</div>
+      <h4>cuGraph Variant Similarity</h4>
+      <p>GPU-accelerated patient similarity network using NVIDIA RAPIDS cuGraph on SPCS. Louvain communities, PageRank, Jaccard similarity across genotype vectors.</p>
+      <div class="p-stats">
+        <strong>3,192</strong> patients &bull; <strong>12</strong> pharmacogenes &bull; GPU A10G<br>
+        Service functions &bull; SQL fallback &bull; Frontend integrated
+      </div>
+    </div>
+
+    <div class="project-card gold">
+      <div class="p-icon">&#128274;</div>
+      <h4>TEFCA Patient Consent</h4>
+      <p>Consent-driven EHR sharing under TEFCA QTF v2.0. Row Access Policies enforce per-category consent, with QHIN governance broker and full audit trail.</p>
+      <div class="p-stats">
+        <strong>1.8M</strong> EHR records &bull; <strong>8</strong> consent categories &bull; <strong>3</strong> React apps<br>
+        IACP model &bull; RAP &bull; PII masking &bull; Audit log
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="p-icon">&#128300;</div>
+      <h4>Ontology Stack Builder</h4>
+      <p>Automated 7-phase pipeline from relational schema to knowledge graph, semantic views, and Cortex Agent — generated from schema discovery, not manual mapping.</p>
+      <div class="p-stats">
+        <strong>130K</strong> KG nodes &bull; <strong>37</strong> ontology classes &bull; <strong>70</strong> views<br>
+        6 SPs &bull; 4 graph UDFs &bull; Semantic view &bull; Agent
+      </div>
+    </div>
+
+    <div class="project-card red">
+      <div class="p-icon">&#129516;</div>
+      <h4>Evo2 Genomic Foundation Model</h4>
+      <p>Arc Institute's Evo2-7B DNA language model deployed to SPCS with model baked into container image. Service functions for variant effect prediction.</p>
+      <div class="p-stats">
+        <strong>7B</strong> parameters &bull; GPU A10G &bull; Offline inference<br>
+        HuggingFace &bull; Auto-suspend &bull; ER Console integrated
+      </div>
+    </div>
+
+    <div class="project-card green">
+      <div class="p-icon">&#128737;</div>
+      <h4>Agent Guardrails + Governance</h4>
+      <p>3-layer defense-in-depth for AI agents: platform grants (SELECT-only role), API SQL validator (regex blocklist), UI confirmation (human-in-the-loop).</p>
+      <div class="p-stats">
+        TRE with <strong>3</strong> RBAC roles &bull; Dynamic masking &bull; Streamlit explorer<br>
+        Formalized as reusable <strong>skill</strong> for any Cortex Agent
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- === SNOWFLAKE SURFACE AREA === -->
+<section>
+  <h2><span class="icon">&#10052;</span> Snowflake Platform Coverage</h2>
+  <p>These projects exercised a broad cross-section of the Snowflake platform:</p>
+  <table>
+    <tr><th>Category</th><th>Features Used</th></tr>
+    <tr><td><strong>Compute</strong></td><td>Snowpark Container Services (5 services, 3 compute pools), GPU (A10G), Warehouses, Snowflake Postgres</td></tr>
+    <tr><td><strong>AI / ML</strong></td><td>Cortex Agents (3), Cortex Analyst, Semantic Views, Cortex Search, Model Registry, PyTorch training</td></tr>
+    <tr><td><strong>Data</strong></td><td>OMOP CDM, FHIR R4, HL7v2, Knowledge Graphs, Dynamic Tables, Streams, Tasks, Stages</td></tr>
+    <tr><td><strong>Governance</strong></td><td>Row Access Policies, Masking Policies, Tags, RBAC roles, Audit trails, Secure Views</td></tr>
+    <tr><td><strong>Integration</strong></td><td>External Access Integrations, Network Rules, Service Functions, MCP Server, Docker Registry</td></tr>
+    <tr><td><strong>Apps</strong></td><td>React (5 SPAs), React Native, Streamlit, Flask backends, nginx reverse proxy</td></tr>
+  </table>
+</section>
+
+<!-- === THE POINT === -->
+<section>
+  <div class="callout">
+    <strong>The throughline:</strong> Every project on this page was built by one person collaborating with SnowWork (Cortex Code). In many cases, the same results could come from a subject-matter expert and an engineer working together with SnowWork — the "three-legged stool" of domain knowledge, technical skill, and AI. Each project went from concept to deployed, working software — with real data, real governance, and real infrastructure — in days.
+  </div>
+</section>
+
+<!-- === CTA === -->
+<div class="cta">
+  <h2>This Is What SnowWork Enables</h2>
+  <p>An AI-native development experience that turns Snowflake's full platform into an accessible, composable toolkit — whether you're a solo builder or a small team. The question isn't <em>what can we build</em> — it's <em>how fast can we show value</em>.</p>
+</div>
+
+</div>
+</body>
+</html>

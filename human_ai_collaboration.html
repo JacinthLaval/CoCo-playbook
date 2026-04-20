@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Human-AI Collaboration Pattern — MS FIMR Case Study</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --snow-blue: #29B5E8;
+    --snow-dark: #1B2A4A;
+    --snow-navy: #0F1B2D;
+    --idea-color: #6366F1;
+    --idea-bg: #EEF2FF;
+    --idea-border: #C7D2FE;
+    --direction-color: #0891B2;
+    --direction-bg: #ECFEFF;
+    --direction-border: #A5F3FC;
+    --correction-color: #DC2626;
+    --correction-bg: #FEF2F2;
+    --correction-border: #FECACA;
+    --codify-color: #D97706;
+    --codify-bg: #FFFBEB;
+    --codify-border: #FDE68A;
+    --text-primary: #1E293B;
+    --text-secondary: #64748B;
+    --bg-page: #F8FAFC;
+    --bg-card: #FFFFFF;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, var(--snow-navy) 0%, #1a3a5c 50%, #0d4a6b 100%);
+    color: white;
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 30% 50%, rgba(41,181,232,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 30%, rgba(99,102,241,0.06) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(41,181,232,0.15);
+    border: 1px solid rgba(41,181,232,0.3);
+    color: var(--snow-blue);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.15;
+    max-width: 800px;
+    margin: 0 auto 20px;
+    position: relative;
+    letter-spacing: -0.5px;
+  }
+  .hero h1 span { color: var(--snow-blue); }
+  .hero p {
+    font-size: 18px;
+    color: rgba(255,255,255,0.7);
+    max-width: 640px;
+    margin: 0 auto;
+    position: relative;
+    line-height: 1.7;
+  }
+
+  .project-context {
+    max-width: 1100px;
+    margin: -30px auto 0;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .context-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 32px 40px;
+    box-shadow: var(--shadow-lg);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  .context-stat { text-align: center; }
+  .context-stat .number {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--snow-dark);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .context-stat .label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .intro {
+    max-width: 900px;
+    margin: 56px auto 0;
+    padding: 0 24px;
+    text-align: center;
+  }
+  .intro h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--snow-dark);
+  }
+  .intro p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    max-width: 720px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  .pattern-nav {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 48px auto 40px;
+    padding: 0 24px;
+    flex-wrap: wrap;
+  }
+  .pattern-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 2px solid transparent;
+    cursor: default;
+  }
+  .pattern-pill.idea { background: var(--idea-bg); color: var(--idea-color); border-color: var(--idea-border); }
+  .pattern-pill.direction { background: var(--direction-bg); color: var(--direction-color); border-color: var(--direction-border); }
+  .pattern-pill.correction { background: var(--correction-bg); color: var(--correction-color); border-color: var(--correction-border); }
+  .pattern-pill.codify { background: var(--codify-bg); color: var(--codify-color); border-color: var(--codify-border); }
+  .pattern-pill svg { width: 18px; height: 18px; }
+
+  .section {
+    max-width: 1000px;
+    margin: 0 auto 64px;
+    padding: 0 24px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .section-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-icon svg { width: 24px; height: 24px; }
+  .section-icon.idea { background: var(--idea-bg); color: var(--idea-color); }
+  .section-icon.direction { background: var(--direction-bg); color: var(--direction-color); }
+  .section-icon.correction { background: var(--correction-bg); color: var(--correction-color); }
+  .section-icon.codify { background: var(--codify-bg); color: var(--codify-color); }
+  .section-title { font-size: 24px; font-weight: 700; }
+  .section-subtitle { font-size: 14px; color: var(--text-secondary); margin-top: 2px; }
+
+  .example-card {
+    background: var(--bg-card);
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 24px;
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .example-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .example-context {
+    padding: 20px 28px 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .context-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .context-icon svg { width: 14px; height: 14px; }
+  .context-icon.idea { background: var(--idea-bg); color: var(--idea-color); }
+  .context-icon.direction { background: var(--direction-bg); color: var(--direction-color); }
+  .context-icon.correction { background: var(--correction-bg); color: var(--correction-color); }
+  .context-icon.codify { background: var(--codify-bg); color: var(--codify-color); }
+  .context-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .context-label.idea { color: var(--idea-color); }
+  .context-label.direction { color: var(--direction-color); }
+  .context-label.correction { color: var(--correction-color); }
+  .context-label.codify { color: var(--codify-color); }
+  .context-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .quote-block {
+    padding: 16px 28px 20px;
+    position: relative;
+  }
+  .quote-block::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 0;
+    right: 28px;
+    height: 1px;
+    background: #F1F5F9;
+  }
+  .human-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+  }
+  .human-tag .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10B981;
+  }
+  .quote-text {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--text-primary);
+    font-style: italic;
+    position: relative;
+    padding-left: 20px;
+    border-left: 3px solid #E2E8F0;
+  }
+  .idea .quote-text { border-left-color: var(--idea-color); }
+  .direction .quote-text { border-left-color: var(--direction-color); }
+  .correction .quote-text { border-left-color: var(--correction-color); }
+  .codify .quote-text { border-left-color: var(--codify-color); }
+
+  .outcome-block {
+    margin: 12px 28px 20px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.6;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .outcome-block.idea { background: var(--idea-bg); color: var(--idea-color); }
+  .outcome-block.direction { background: var(--direction-bg); color: var(--direction-color); }
+  .outcome-block.correction { background: var(--correction-bg); color: var(--correction-color); }
+  .outcome-block.codify { background: var(--codify-bg); color: var(--codify-color); }
+  .outcome-block svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; }
+  .outcome-block strong { font-weight: 600; }
+
+  .flow-section {
+    max-width: 900px;
+    margin: 80px auto 40px;
+    padding: 0 24px;
+    text-align: center;
+  }
+  .flow-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--snow-dark);
+  }
+  .flow-section > p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .flow-diagram {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0;
+    margin: 0 auto 20px;
+    flex-wrap: wrap;
+  }
+  .flow-node {
+    padding: 24px 20px;
+    border-radius: 14px;
+    width: 200px;
+    text-align: center;
+  }
+  .flow-node h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .flow-node p { font-size: 12px; opacity: 0.8; line-height: 1.5; }
+  .flow-node.idea { background: var(--idea-bg); color: var(--idea-color); border: 1px solid var(--idea-border); }
+  .flow-node.direction { background: var(--direction-bg); color: var(--direction-color); border: 1px solid var(--direction-border); }
+  .flow-node.correction { background: var(--correction-bg); color: var(--correction-color); border: 1px solid var(--correction-border); }
+  .flow-node.codify { background: var(--codify-bg); color: var(--codify-color); border: 1px solid var(--codify-border); }
+  .flow-node.result {
+    background: linear-gradient(135deg, var(--snow-navy), #1a3a5c);
+    color: white;
+    border: none;
+  }
+  .flow-node.result p { opacity: 0.7; }
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    color: #CBD5E1;
+    font-size: 24px;
+  }
+
+  .takeaway {
+    max-width: 900px;
+    margin: 60px auto 80px;
+    padding: 0 24px;
+  }
+  .takeaway-card {
+    background: linear-gradient(135deg, var(--snow-navy) 0%, #1a3a5c 100%);
+    border-radius: 18px;
+    padding: 48px;
+    color: white;
+  }
+  .takeaway-card h2 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  .takeaway-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin-top: 28px;
+  }
+  .takeaway-item {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .takeaway-item h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--snow-blue);
+  }
+  .takeaway-item p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    border-top: 1px solid #E2E8F0;
+  }
+  .footer a { color: var(--snow-blue); text-decoration: none; }
+
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 32px; }
+    .hero { padding: 60px 20px 40px; }
+    .context-card { grid-template-columns: 1fr 1fr; gap: 20px; }
+    .takeaway-grid { grid-template-columns: 1fr; }
+    .flow-diagram { flex-direction: column; align-items: center; }
+    .flow-arrow { transform: rotate(90deg); padding: 6px 0; }
+    .takeaway-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">Case Study &mdash; Snowflake Cortex Code</div>
+  <h1>The Human-AI <span>Collaboration</span> Pattern</h1>
+  <p>How a domain expert and an AI coding assistant built a novel deep learning system for infant mortality prediction &mdash; through ideas, direction, and correction.</p>
+</div>
+
+<div class="project-context">
+  <div class="context-card">
+    <div class="context-stat">
+      <div class="number">1.3M</div>
+      <div class="label">Model Parameters</div>
+    </div>
+    <div class="context-stat">
+      <div class="number">50K</div>
+      <div class="label">Patient Records (OMOP)</div>
+    </div>
+    <div class="context-stat">
+      <div class="number">84</div>
+      <div class="label">Input Features (3 Modalities)</div>
+    </div>
+    <div class="context-stat">
+      <div class="number">0.893</div>
+      <div class="label">Best AUROC (28-day)</div>
+    </div>
+  </div>
+</div>
+
+<div class="intro">
+  <h2>Four Modes of Human-AI Interaction</h2>
+  <p>Over the course of building the Mississippi Fetal &amp; Infant Mortality Review (FIMR) system, a clear collaboration pattern emerged. The human drives <em>what</em> and <em>why</em>; the AI handles <em>how</em>. But the human stays in the loop through four distinct interaction modes &mdash; including the discipline of pausing to codify hard-won patterns into reusable skills.</p>
+</div>
+
+<div class="pattern-nav">
+  <div class="pattern-pill idea">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/><path d="M10 21h4"/></svg>
+    New Ideas
+  </div>
+  <div class="pattern-pill direction">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+    Clarity &amp; Direction
+  </div>
+  <div class="pattern-pill correction">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
+    Correcting Course
+  </div>
+  <div class="pattern-pill codify">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+    Pausing to Codify
+  </div>
+</div>
+
+<!-- ===== SECTION 1: NEW IDEAS ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon idea">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/><path d="M10 21h4"/></svg>
+    </div>
+    <div>
+      <div class="section-title">Prompting New Ideas</div>
+      <div class="section-subtitle">The human seeds the vision. The AI builds the scaffolding.</div>
+    </div>
+  </div>
+
+  <div class="example-card idea">
+    <div class="example-context">
+      <div class="context-icon idea">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label idea">The Spark</div>
+        <div class="context-text">The entire project begins. Todd connects a real-world Mississippi legislative mandate to existing Snowflake healthcare data assets, and sketches the full vision in a single message.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"morning! I've been asked to look at the following situation in Mississippi: The State Department of Health would be charged with creating a medical panel to review the state's high fetal and infant mortality rate while examining deaths of infants up to one year of age. Take a look at the synthetic healthcare data share... is there pediatric and fetal data in it? If not, thinking using that structure to create some robust synthetic data to create a cortex analyst view and potentially link PubMed and other assets"</div>
+    </div>
+    <div class="outcome-block idea">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Result:</strong> 12-table OMOP CDM dataset with 50K pregnancies, Mississippi-specific demographics, 77 county locations, and linked SDOH data from CDC, USDA, and HRSA.</span>
+    </div>
+  </div>
+
+  <div class="example-card idea">
+    <div class="example-context">
+      <div class="context-icon idea">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label idea">Pushing Beyond Convention</div>
+        <div class="context-text">The AI had proposed using standard OHDSI prediction patterns. Todd rejects the conventional approach and pushes toward something novel &mdash; a multi-modal deep learning model blending structured clinical data with unstructured SDOH.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"so..... before we go too far, we are basically taking what others have done... would our prior ontology pattern take this to another level? how do we go about this prediction in a novel way? blend some unstructured social determinant of health data? see where I'm going, a really deep model?"</div>
+    </div>
+    <div class="outcome-block idea">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Result:</strong> A novel multi-modal Transformer with dual encoders (mother + infant branches), bidirectional cross-attention, and a gated SDOH fusion layer &mdash; 1.3M parameters achieving 0.893 AUROC.</span>
+    </div>
+  </div>
+
+  <div class="example-card idea">
+    <div class="example-context">
+      <div class="context-icon idea">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label idea">Lateral Thinking</div>
+        <div class="context-text">With the technical system built, Todd makes an unexpected lateral connection &mdash; Mississippi's dramatic literacy turnaround &mdash; as a proven blueprint for tackling infant mortality through the same cultural and policy levers.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"awesome... last item for tonight.. take a look at the fantastic success in Mississippi of their advancement in literacy and overall K-12 education system. What were the cultural changes that had to take place by the parents to make this change? How did they do it? I bet you know where I'm going here.... do some research that I don't need to constantly approve."</div>
+    </div>
+    <div class="outcome-block idea">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Result:</strong> "From Reading to Breathing" &mdash; an 8-pillar policy playbook mapping Mississippi's literacy miracle (49th&rarr;21st in NAEP reading) to a proposed infant mortality reduction framework, with evidence from Cradle Cincinnati's 41% IMR reduction.</span>
+    </div>
+  </div>
+
+  <div class="example-card idea">
+    <div class="example-context">
+      <div class="context-icon idea">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label idea">The Full Stack Vision</div>
+        <div class="context-text">A single message that defines the entire application architecture: React dashboard, SPCS hosting, interactive county maps, NLP querying, Cortex Agent with PubMed, and multi-tasking instructions.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"ok, let's build a react app hosted in SPCS accessible via a new PAT that accesses this. We'll add TN data later. Looking for an interactive visual that allows you to drill into county/city/zip specific statistics filtering by year/month and race as a general requirement. Open to suggestions. Also want the ask your natural language option for ad-hoc analysis. If you want to multi-task, need to create the cortex agent that will add the Pubmed Cortex Search service to the FIMR analyst."</div>
+    </div>
+    <div class="outcome-block idea">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Result:</strong> A full SPCS-deployed React dashboard with county choropleth maps, KPI cards, trend charts, a Cortex Agent "Ask" panel wired to both FIMR analytics and 72M PubMed abstracts, plus a real-time risk scoring tab.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 2: CLARITY & DIRECTION ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon direction">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+    </div>
+    <div>
+      <div class="section-title">Providing Clarity &amp; Direction</div>
+      <div class="section-subtitle">The human steers decisions. The AI presents options; the human chooses the path.</div>
+    </div>
+  </div>
+
+  <div class="example-card direction">
+    <div class="example-context">
+      <div class="context-icon direction">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label direction">Data Precision</div>
+        <div class="context-text">The AI had calculated Mississippi birth numbers. Todd injects real epidemiological data and specifies exact mortality trend requirements, plus plans ahead for a comparison state.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"thinking right... also want the data to reflect the actual mortality rate of 9.7 out of 1000 in 2024 growing from 8 in 1000 in 2020. let's do 50k pregnancies with that 6% decrease trend line. after we get MS looking good, will want to add another state that is doing much better, maybe TN, to look at hypothetical differences and postulate potential root causes."</div>
+    </div>
+    <div class="outcome-block direction">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Result:</strong> The 50K dataset was generated with year-specific birth counts (35K&rarr;32.9K), a realistic 8.0&rarr;9.7 IMR trend over 2020-2025, and clear racial disparities matching published CDC statistics.</span>
+    </div>
+  </div>
+
+  <div class="example-card direction">
+    <div class="example-context">
+      <div class="context-icon direction">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label direction">Domain Expertise Injection</div>
+        <div class="context-text">Just before the data generator was about to run, Todd stops the process to inject a critical racial disparity statistic that would be invisible to the AI.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"before you do that, let me add one macro statistic that is true in the real data.... the african american or black mortality rate was 15.2 compared to other races 5.8 in 2024. while it does not need to be perfectly aligned, need to show the higher rate amongst african americans"</div>
+    </div>
+    <div class="outcome-block direction">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Result:</strong> Generated data reflects Black IMR of 13.6/1000 vs. White 4.5/1000 &mdash; accurately modeling the 2.6x racial disparity observed in real Mississippi vital statistics.</span>
+    </div>
+  </div>
+
+  <div class="example-card direction">
+    <div class="example-context">
+      <div class="context-icon direction">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label direction">Deployment Decision</div>
+        <div class="context-text">The AI presented three deployment architecture options. Todd makes a decisive choice and simultaneously defines a new feature requirement: the patient generator.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"let's do Option B first for demonstration purposes adding a 'new patient data' generator to simulate a new pregnant mother entering the program."</div>
+    </div>
+    <div class="outcome-block direction">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Result:</strong> Inference engine integrated directly into the Flask backend, with a synthetic PatientGenerator supporting low/moderate/high risk profiles across 15 Mississippi counties. Deployed as a new "Risk Score" tab with interactive gauges.</span>
+    </div>
+  </div>
+
+  <div class="example-card direction">
+    <div class="example-context">
+      <div class="context-icon direction">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label direction">Priority Setting</div>
+        <div class="context-text">Multiple next steps were available (ontology, PubMed, predictions). A single short directive sets the immediate priority.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"let's do the semantic view first"</div>
+    </div>
+    <div class="outcome-block direction">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Result:</strong> Full semantic view deployed as <code>MS_FIMR_ANALYTICS</code> with 12 tables, 17 relationships, and 10 verified queries &mdash; enabling natural language analytics across the entire OMOP dataset.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 3: CORRECTING COURSE ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon correction">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
+    </div>
+    <div>
+      <div class="section-title">Correcting Misunderstandings</div>
+      <div class="section-subtitle">The human catches what the AI misses. Short feedback loops prevent compounding errors.</div>
+    </div>
+  </div>
+
+  <div class="example-card correction">
+    <div class="example-context">
+      <div class="context-icon correction">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label correction">Catching a Critical Bug</div>
+        <div class="context-text">The Risk Score tab had just been deployed. It looked beautiful. But Todd's systematic testing &mdash; generating multiple patients across all risk levels &mdash; immediately revealed the model wasn't actually differentiating.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"functional and beautiful. one question. have generated five new records, some low, some moderate, and some high. all have come back at moderate overall risk"</div>
+    </div>
+    <div class="outcome-block correction">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Root Cause Found:</strong> Feature vectors were being constructed in a different column order than the model was trained on. Polars pivot operations produce nondeterministic column orders between runs. The AI traced back through normalization statistics to reconstruct the exact training order and fixed the generator.</span>
+    </div>
+  </div>
+
+  <div class="example-card correction">
+    <div class="example-context">
+      <div class="context-icon correction">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label correction">Wrong Target</div>
+        <div class="context-text">The AI found a Streamlit app and started analyzing it. Todd immediately redirects &mdash; it's not the right application.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"not the streamlit app, look at the react-based app that has the tabs, ER Console, Similarity, TRE/OMOP, and Settings. its the TRE/OMOP tab that looks to be connected to an Analyst agent"</div>
+    </div>
+    <div class="outcome-block correction">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Course Corrected:</strong> The AI pivoted to the correct React application, identified its architecture, and used it as the foundation for the new FIMR dashboard &mdash; inheriting the proven SPCS deployment pattern.</span>
+    </div>
+  </div>
+
+  <div class="example-card correction">
+    <div class="example-context">
+      <div class="context-icon correction">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label correction">Quality Standards</div>
+        <div class="context-text">The dashboard had been iterating on a county bubble map using Carto tiles. Todd steps back and challenges both the visual quality and the framework choice.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"let's take a step back... what is the framework being used in this react app. I must say it's not near as attractive as the precision medicine app. also, is there not a maps framework that can be used other than carto, some other python package?"</div>
+    </div>
+    <div class="outcome-block correction">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Result:</strong> Complete UI overhaul &mdash; switched from Carto bubble maps to react-simple-maps with TopoJSON for a proper county choropleth, rewrote all 8 components with a new Snowflake-blue design system, card shadows, and the polished light theme.</span>
+    </div>
+  </div>
+
+  <div class="example-card correction">
+    <div class="example-context">
+      <div class="context-icon correction">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label correction">Precision Feedback</div>
+        <div class="context-text">The map was rendering after a query fix, but the visual encoding had a bug. Five words is all it takes.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"bubble size and color don't match"</div>
+    </div>
+    <div class="outcome-block correction">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Fixed:</strong> SVG layer ordering corrected so bubble radius scaled with IMR magnitude while color mapped to the same metric &mdash; a 5-word correction that identified a rendering bug the AI would not have caught on its own.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FLOW DIAGRAM ===== -->
+
+<!-- ===== SECTION 4: PAUSING TO CODIFY ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon codify">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+    </div>
+    <div>
+      <div class="section-title">Pausing to Codify</div>
+      <div class="section-subtitle">The human recognizes when a hard-won pattern deserves to become a reusable skill &mdash; not just a one-off solution.</div>
+    </div>
+  </div>
+
+  <div class="example-card codify">
+    <div class="example-context">
+      <div class="context-icon codify">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label codify">From Notes to Formal Knowledge</div>
+        <div class="context-text">After building a 3-layer defense-in-depth guardrails system (read-only Snowflake role, API-layer SQL validation, UI confirmation flow), the AI had documented the pattern in a markdown file. Todd sees something bigger.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"i see you created an md file for healthcare guardrails. should we formally make that a skill?"</div>
+    </div>
+    <div class="outcome-block codify">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Skill Created:</strong> <code>agent-guardrails</code> &mdash; a reusable skill that implements defense-in-depth security for any Cortex Agent or MCP Server app, ensuring AI-generated queries can never modify data.</span>
+    </div>
+  </div>
+
+  <div class="example-card codify">
+    <div class="example-context">
+      <div class="context-icon codify">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label codify">Capturing Hard-Won Lessons</div>
+        <div class="context-text">The session had just hit every pitfall of bulk data loading into Snowflake: multi-value INSERT failures at scale, Python date serialization issues, distribution stacking. Todd pauses the build to preserve what was learned.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"before running, looks like you've learned a few things about generating synthetic data at scale here, should you create a skill or will this become a best practice inherently?"</div>
+    </div>
+    <div class="outcome-block codify">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Skill Created:</strong> <code>synthetic-data-generator</code> &mdash; captures proven patterns for generating synthetic data at scale and loading into Snowflake, avoiding the <code>write_pandas</code> vs. INSERT pitfalls, date serialization issues, and distribution management.</span>
+    </div>
+  </div>
+
+  <div class="example-card codify">
+    <div class="example-context">
+      <div class="context-icon codify">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label codify">Turning Frustration into Future-Proofing</div>
+        <div class="context-text">After days of debugging SPCS authentication &mdash; discovering that the service token does NOT work with the SQL REST API, only with the Python connector &mdash; Todd signals that this pain should never be repeated.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"OK, let's continue. Seems to be a very difficult process for auth between a containerized app and the data. Once we figure this out, will want to create a skill"</div>
+    </div>
+    <div class="outcome-block codify">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Skill Created:</strong> <code>spcs-spa-auth</code> &mdash; the definitive SPCS authentication pattern: use <code>snowflake-connector-python</code> with the injected service token, never the SQL REST API. Prevents others from repeating a multi-day debugging journey.</span>
+    </div>
+  </div>
+
+  <div class="example-card codify">
+    <div class="example-context">
+      <div class="context-icon codify">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div>
+        <div class="context-label codify">Recognizing the Repeatable Pattern</div>
+        <div class="context-text">The FIMR dashboard was live on SPCS with Cortex Agent integration. Todd zooms out and sees the deployment pattern itself &mdash; React SPA + Flask backend + Cortex Agent via <code>DATA_AGENT_RUN</code> &mdash; as a reusable template.</div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <div class="human-tag"><span class="dot"></span> Human Prompt</div>
+      <div class="quote-text">"so react apps to cortex agents, worth a skill for repeatable consistency?"</div>
+    </div>
+    <div class="outcome-block codify">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+      <span><strong>Skill Created:</strong> <code>spcs-react-agent</code> &mdash; end-to-end recipe for React SPA dashboards on SPCS with Cortex Agent integration, covering service token auth, <code>DATA_AGENT_RUN</code> vs REST API, Docker amd64 builds, <code>ALTER SERVICE</code> deployment, and nginx proxy configuration.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FLOW DIAGRAM ===== -->
+<div class="flow-section">
+  <h2>The Collaboration Loop</h2>
+  <p>These four modes aren't sequential &mdash; they form a continuous feedback loop where each interaction sharpens the next, and the best patterns get captured as reusable skills.</p>
+  <div class="flow-diagram">
+    <div class="flow-node idea">
+      <h4>New Idea</h4>
+      <p>Human seeds a vision, concept, or creative direction</p>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-node result">
+      <h4>AI Builds</h4>
+      <p>Code, architecture, data pipelines, deployments</p>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-node direction">
+      <h4>Human Steers</h4>
+      <p>Chooses options, injects domain expertise, sets priorities</p>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-node correction">
+      <h4>Human Corrects</h4>
+      <p>Catches bugs, redirects, enforces quality standards</p>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-node codify">
+      <h4>Human Codifies</h4>
+      <p>Pauses to capture hard-won patterns as reusable skills</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAKEAWAYS ===== -->
+<div class="takeaway">
+  <div class="takeaway-card">
+    <h2>Key Takeaways</h2>
+    <div class="takeaway-grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="takeaway-item">
+        <h4>The Human Sets the "Why"</h4>
+        <p>Every breakthrough in this project &mdash; the multi-modal architecture, the literacy playbook, the SDOH fusion &mdash; came from the human. The AI never would have connected Mississippi education reform to infant mortality reduction.</p>
+      </div>
+      <div class="takeaway-item">
+        <h4>Short Loops Beat Long Specs</h4>
+        <p>Five words ("bubble size and color don't match") corrected a rendering bug faster than any design document could. The most effective corrections were the shortest ones, applied at the moment of discovery.</p>
+      </div>
+      <div class="takeaway-item">
+        <h4>Domain Knowledge Is Irreplaceable</h4>
+        <p>The AI built the PyTorch model. But knowing that Black infant mortality is 2.6x higher, or that <code>normal_pregnancy</code> should be a count not a flag &mdash; that required a human who understands the clinical domain.</p>
+      </div>
+      <div class="takeaway-item">
+        <h4>Codify the Pain</h4>
+        <p>Four times during this project, the human paused forward progress to turn hard-won lessons into reusable skills. The frustration of SPCS auth debugging became a skill that saves the <em>next</em> team days. Institutional knowledge compounds.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Mississippi FIMR Project &mdash; Built with <a href="https://docs.snowflake.com/en/user-guide/cortex-code/cortex-code">Snowflake Cortex Code</a> &mdash; April 2026</p>
+</div>
+
+</body>
+</html>
