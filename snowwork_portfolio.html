@@ -165,11 +165,11 @@
 <section>
   <h2><span class="icon">&#128200;</span> By the Numbers</h2>
   <div class="stat-row">
-    <div class="stat-box"><div class="number blue">10</div><div class="label">Full Applications</div></div>
+    <div class="stat-box"><div class="number blue">11</div><div class="label">Full Applications</div></div>
     <div class="stat-box"><div class="number green">8</div><div class="label">SPCS Services Deployed</div></div>
     <div class="stat-box"><div class="number gold">4</div><div class="label">ML Models Trained</div></div>
     <div class="stat-box"><div class="number purple">3</div><div class="label">Cortex Agents</div></div>
-    <div class="stat-box"><div class="number blue">5</div><div class="label">Skills Created</div></div>
+    <div class="stat-box"><div class="number blue">6</div><div class="label">Skills Created</div></div>
     <div class="stat-box"><div class="number red">3.4M+</div><div class="label">Clinical Records</div></div>
   </div>
 </section>
@@ -243,6 +243,14 @@
       <div class="tl-title">FHIR Ingestion Manager</div>
       <div class="tl-desc">Full interoperability pipeline — Snowflake Postgres landing zone, React SPCS app, FHIR/HL7v2/CSV parsers, OMOP transform, quality scoring (92.3% completeness), PG auto-suspend system</div>
       <div class="tl-tags"><span class="tl-tag spcs">SPCS</span><span class="tl-tag">Snowflake Postgres</span><span class="tl-tag">FHIR/HL7v2</span><span class="tl-tag">UDTFs</span></div>
+    </div>
+
+    <div class="tl-item active">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Week 5&ndash;6 &mdash; April</div>
+      <div class="tl-title">HL7v2/FHIR to OMOP/Tuva Transformer (Native App)</div>
+      <div class="tl-desc">Snowflake Native App for Marketplace — parses FHIR R4 JSON, XML, and HL7v2 into OMOP CDM v5.4 or Tuva Input Layer. 23 mappers, vocabulary seeds from OHDSI Athena, Streamlit UI with 7 tabs, per-mapper progress, graduated testing (Level 1–3). V1.5 published.</div>
+      <div class="tl-tags"><span class="tl-tag">Native App</span><span class="tl-tag">FHIR/HL7v2</span><span class="tl-tag">OMOP CDM</span><span class="tl-tag">Tuva</span><span class="tl-tag gov">Marketplace</span></div>
     </div>
 
     <div class="tl-item active">
@@ -348,6 +356,16 @@
       </div>
     </div>
 
+    <div class="project-card gold">
+      <div class="p-icon">&#128260;</div>
+      <h4>HL7v2/FHIR → OMOP/Tuva Transformer</h4>
+      <p>Snowflake Native App — parses FHIR R4 (JSON + XML), HL7v2, and maps to OMOP CDM v5.4 or Tuva Input Layer. 23 OMOP mappers + 13 Tuva mappers, OHDSI Athena vocabulary seeds, Streamlit UI (7 tabs), per-mapper progress, graduated testing framework.</p>
+      <div class="p-stats">
+        <strong>36</strong> mapper procs &bull; <strong>17</strong> OMOP tables &bull; <strong>13</strong> Tuva tables &bull; V1.5<br>
+        Native App &bull; 3 input formats &bull; Vocabulary browser &bull; Data quality scoring
+      </div>
+    </div>
+
     <div class="project-card red">
       <div class="p-icon">&#128300;</div>
       <h4>OncoLook Digital Pathology</h4>
@@ -389,10 +407,10 @@
     <tr><th>Category</th><th>Features Used</th></tr>
     <tr><td><strong>Compute</strong></td><td>Snowpark Container Services (8 services, 3 compute pools), GPU (A10G, T4), Warehouses, Snowflake Postgres</td></tr>
     <tr><td><strong>AI / ML</strong></td><td>Cortex Agents (3), Cortex Analyst, Semantic Views, Cortex Search, Model Registry, PyTorch training, faster-whisper, Cortex AI_COMPLETE</td></tr>
-    <tr><td><strong>Data</strong></td><td>OMOP CDM, FHIR R4, HL7v2, Digital Pathology (WSI), Knowledge Graphs, Dynamic Tables, Streams, Tasks, Stages</td></tr>
+    <tr><td><strong>Data</strong></td><td>OMOP CDM v5.4, Tuva Input Layer, FHIR R4 (JSON + XML), HL7v2, Digital Pathology (WSI), Knowledge Graphs, Dynamic Tables, Streams, Tasks, Stages</td></tr>
     <tr><td><strong>Governance</strong></td><td>Row Access Policies, Masking Policies, Tags, RBAC roles, Audit trails, Secure Views</td></tr>
     <tr><td><strong>Integration</strong></td><td>External Access Integrations, Network Rules, Service Functions, MCP Server, Docker Registry</td></tr>
-    <tr><td><strong>Apps</strong></td><td>React (6 SPAs), React Native, Streamlit (2), Flask backends, nginx reverse proxy</td></tr>
+    <tr><td><strong>Apps</strong></td><td>React (6 SPAs), React Native, Streamlit (3), Native App (Marketplace), Flask backends, nginx reverse proxy</td></tr>
   </table>
 </section>
 
