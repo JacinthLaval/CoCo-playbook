@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoCo Playbook — Live Apps &amp; Demos</title>
+<style>
+  :root {
+    --sf-blue: #1B4F72;
+    --sf-accent: #29B5E8;
+    --sf-light: #EBF5FB;
+    --gold: #d4a017;
+    --red: #C0392B;
+    --green: #27AE60;
+    --warm: #E67E22;
+    --teal: #16a085;
+    --purple: #6C5CE7;
+    --bg: #FAFBFC;
+    --card: #FFFFFF;
+    --text: #2C3E50;
+    --muted: #7F8C8D;
+    --border: #E0E0E0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+  .hero {
+    background: linear-gradient(135deg, #1B4F72 0%, #0d2940 40%, #29B5E8 100%);
+    color: white; padding: 64px 40px 48px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 50px;
+    background: var(--bg); clip-path: ellipse(55% 100% at 50% 100%);
+  }
+  .hero h1 { font-size: 2.4em; font-weight: 300; letter-spacing: -0.5px; margin-bottom: 8px; }
+  .hero h1 strong { font-weight: 700; }
+  .hero .subtitle { font-size: 1.1em; opacity: 0.9; max-width: 700px; margin: 0 auto 18px; }
+  .hero .badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .hero .badge {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px; padding: 4px 14px; font-size: 0.8em; backdrop-filter: blur(4px);
+  }
+
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.8);
+    font-size: 0.85em; text-decoration: none; position: absolute; top: 20px; left: 24px;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: white; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 40px 0; }
+  section + section { border-top: 1px solid var(--border); }
+
+  h2 { font-size: 1.45em; color: var(--sf-blue); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  h2 .icon { font-size: 1.1em; }
+  p { margin-bottom: 12px; font-size: 0.93em; }
+
+  .app-card {
+    background: var(--card); border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid var(--border);
+    margin-bottom: 28px; overflow: hidden; transition: box-shadow 0.3s, transform 0.3s;
+  }
+  .app-card:hover {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1); transform: translateY(-2px);
+  }
+
+  .app-top { display: flex; align-items: stretch; }
+
+  .app-accent {
+    width: 6px; flex-shrink: 0;
+  }
+  .app-accent.blue { background: var(--sf-accent); }
+  .app-accent.purple { background: var(--purple); }
+  .app-accent.green { background: var(--green); }
+  .app-accent.gold { background: var(--gold); }
+  .app-accent.red { background: var(--red); }
+  .app-accent.teal { background: var(--teal); }
+  .app-accent.warm { background: var(--warm); }
+
+  .app-content { flex: 1; padding: 28px 28px 24px; }
+
+  .app-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+  .app-icon { font-size: 2.2em; line-height: 1; flex-shrink: 0; }
+  .app-title-block { flex: 1; }
+  .app-title-block h3 { font-size: 1.2em; color: var(--sf-blue); margin: 0 0 4px; }
+  .app-title-block .app-tagline { font-size: 0.85em; color: var(--muted); margin: 0; }
+
+  .app-status {
+    font-size: 0.7em; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    padding: 4px 12px; border-radius: 12px; white-space: nowrap; height: fit-content;
+  }
+  .app-status.deployed { background: #E8F5E9; color: var(--green); }
+  .app-status.published { background: #EDE7F6; color: var(--purple); }
+  .app-status.running { background: #E3F2FD; color: #1976D2; }
+
+  .app-desc { font-size: 0.9em; color: #444; margin-bottom: 16px; line-height: 1.65; }
+
+  .app-stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .app-stat {
+    background: #f8f9fa; border-radius: 8px; padding: 10px 14px;
+  }
+  .app-stat .s-label { font-size: 0.68em; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .app-stat .s-value { font-size: 0.88em; color: var(--sf-blue); font-weight: 700; }
+
+  .app-tech { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .tech-tag {
+    font-size: 0.7em; padding: 3px 10px; border-radius: 10px; font-weight: 600;
+    background: var(--sf-light); color: var(--sf-blue);
+  }
+  .tech-tag.spcs { background: #EDE7F6; color: var(--purple); }
+  .tech-tag.ml { background: #FFF3E0; color: var(--warm); }
+  .tech-tag.gov { background: #E8F5E9; color: var(--green); }
+  .tech-tag.gpu { background: #FCE4EC; color: var(--red); }
+  .tech-tag.native { background: #E8EAF6; color: #3F51B5; }
+
+  .app-links { display: flex; gap: 12px; flex-wrap: wrap; }
+  .app-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.82em; font-weight: 600; text-decoration: none;
+    padding: 8px 18px; border-radius: 8px; transition: all 0.2s;
+  }
+  .app-link.primary {
+    background: var(--sf-blue); color: white;
+  }
+  .app-link.primary:hover { background: #153e5a; }
+  .app-link.secondary {
+    background: #f0f4f8; color: var(--sf-blue); border: 1px solid var(--border);
+  }
+  .app-link.secondary:hover { background: #e4eaf0; }
+  .app-link.live {
+    background: var(--sf-accent); color: white;
+  }
+  .app-link.live:hover { background: #1fa0d0; }
+
+  .callout {
+    border-left: 4px solid var(--sf-accent); background: var(--sf-light);
+    border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 18px 0; font-size: 0.9em;
+  }
+  .callout strong { color: var(--sf-blue); }
+
+  .cta {
+    background: linear-gradient(135deg, #1B4F72, #29B5E8); color: white;
+    border-radius: 12px; padding: 32px; text-align: center; margin: 30px 0 10px;
+  }
+  .cta h2 { color: white; justify-content: center; margin-bottom: 8px; }
+  .cta p { color: rgba(255,255,255,0.9); font-size: 0.95em; }
+
+  @media (max-width: 700px) {
+    .hero h1 { font-size: 1.8em; }
+    .app-stats-row { grid-template-columns: 1fr 1fr; }
+    .app-header { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <a class="back-link" href="index.html">&larr; Back to Playbook</a>
+  <h1>Live <strong>Apps &amp; Demos</strong></h1>
+  <p class="subtitle">Working software &mdash; deployed to SPCS, published as Native Apps, or hosted on GitHub Pages. Every line of code written with CoCo.</p>
+  <div class="badges">
+    <span class="badge">SPCS Services</span>
+    <span class="badge">Native Apps</span>
+    <span class="badge">GitHub Pages</span>
+    <span class="badge">React &bull; Streamlit &bull; Flask</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- === MS FIMR === -->
+<section>
+<h2><span class="icon">&#128200;</span> Deployed Applications</h2>
+
+<div class="app-card">
+  <div class="app-top">
+    <div class="app-accent blue"></div>
+    <div class="app-content">
+      <div class="app-header">
+        <div class="app-icon">&#127973;</div>
+        <div class="app-title-block">
+          <h3>Mississippi FIMR AI Platform</h3>
+          <p class="app-tagline">Multi-modal infant mortality prediction &amp; research for the Mississippi State Department of Health</p>
+        </div>
+        <span class="app-status deployed">Deployed</span>
+      </div>
+      <p class="app-desc">County-level infant mortality dashboard with racial disparity analysis, a multi-modal PyTorch Transformer (AUROC 0.893), SDOH fusion across 82 counties, and a Cortex Research Agent backed by 72M PubMed chunks. React SPA deployed on SPCS with county choropleth maps, trend charts, and a natural language "Ask" panel.</p>
+      <div class="app-stats-row">
+        <div class="app-stat"><div class="s-label">Patients</div><div class="s-value">100,000</div></div>
+        <div class="app-stat"><div class="s-label">Clinical Records</div><div class="s-value">3.4M</div></div>
+        <div class="app-stat"><div class="s-label">MS Counties</div><div class="s-value">82</div></div>
+        <div class="app-stat"><div class="s-label">Model AUROC</div><div class="s-value">0.893</div></div>
+      </div>
+      <div class="app-tech">
+        <span class="tech-tag spcs">SPCS</span>
+        <span class="tech-tag ml">PyTorch Transformer</span>
+        <span class="tech-tag">React</span>
+        <span class="tech-tag">Cortex Agent</span>
+        <span class="tech-tag">Semantic View</span>
+        <span class="tech-tag">OMOP CDM</span>
+      </div>
+      <div class="app-links">
+        <a class="app-link primary" href="https://github.com/JacinthLaval/MS_FIMR" target="_blank">&#128193; GitHub Repo</a>
+        <a class="app-link secondary" href="https://jacinthlaval.github.io/MS_FIMR/docs/executive_summary.html" target="_blank">&#128196; Executive Summary</a>
+        <a class="app-link secondary" href="https://jacinthlaval.github.io/MS_FIMR/docs/mississippi_playbook.html" target="_blank">&#128214; MS Playbook</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- === Precision Advisor === -->
+<div class="app-card">
+  <div class="app-top">
+    <div class="app-accent green"></div>
+    <div class="app-content">
+      <div class="app-header">
+        <div class="app-icon">&#128138;</div>
+        <div class="app-title-block">
+          <h3>Precision Advisor &amp; ER Console</h3>
+          <p class="app-tagline">Clinical decision support with pharmacogenomics, ambient scribe, and population health</p>
+        </div>
+        <span class="app-status deployed">Deployed</span>
+      </div>
+      <p class="app-desc">A comprehensive clinical workstation built with React Native (Expo). Six tabs covering the patient journey: Patient profile with PGx variants and risk gauges, Ambient Scribe with real-time transcription and SOAP note generation, Population Health dashboards, ER Console with pharmacogenomic drug-gene interaction alerts, cuGraph variant similarity network, and a Platform Governance view showing live RBAC, masking, and audit status. MCP Server integration, 3 stored procedures, and 3-layer agent guardrails.</p>
+      <div class="app-stats-row">
+        <div class="app-stat"><div class="s-label">PGx Profiles</div><div class="s-value">11,600</div></div>
+        <div class="app-stat"><div class="s-label">Genomic Rows</div><div class="s-value">17.3B</div></div>
+        <div class="app-stat"><div class="s-label">App Tabs</div><div class="s-value">6</div></div>
+        <div class="app-stat"><div class="s-label">Guardrail Layers</div><div class="s-value">3</div></div>
+      </div>
+      <div class="app-tech">
+        <span class="tech-tag">React Native</span>
+        <span class="tech-tag">MCP Server</span>
+        <span class="tech-tag">Cortex Agent</span>
+        <span class="tech-tag ml">faster-whisper</span>
+        <span class="tech-tag spcs">SPCS (Scribe)</span>
+        <span class="tech-tag gov">Guardrails</span>
+        <span class="tech-tag">cuGraph</span>
+      </div>
+      <div class="app-links">
+        <a class="app-link primary" href="https://github.com/JacinthLaval/tre-healthcare-snowflake" target="_blank">&#128193; GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- === FHIR-to-OMOP Transformer === -->
+<div class="app-card">
+  <div class="app-top">
+    <div class="app-accent purple"></div>
+    <div class="app-content">
+      <div class="app-header">
+        <div class="app-icon">&#128260;</div>
+        <div class="app-title-block">
+          <h3>HL7v2/FHIR &rarr; OMOP/Tuva Transformer</h3>
+          <p class="app-tagline">Snowflake Native App for clinical data interoperability &mdash; Marketplace-ready</p>
+        </div>
+        <span class="app-status published">Native App V1.5</span>
+      </div>
+      <p class="app-desc">A Snowflake Native App that transforms FHIR R4 (JSON + XML) and HL7v2 pipe-delimited messages into OMOP CDM v5.4 or Tuva Input Layer tables. Auto-detects input format, runs 23 OMOP mappers or 13 Tuva mappers with OHDSI Athena vocabulary crosswalks. Streamlit UI with 7 tabs: Configure, Run (with per-mapper progress), History, Vocabulary Browser, Coverage Report, Data Quality, and Explore. Graduated testing framework (Level 1&ndash;3) with mandatory pause gate.</p>
+      <div class="app-stats-row">
+        <div class="app-stat"><div class="s-label">Mapper Procs</div><div class="s-value">36</div></div>
+        <div class="app-stat"><div class="s-label">OMOP Tables</div><div class="s-value">17</div></div>
+        <div class="app-stat"><div class="s-label">Input Formats</div><div class="s-value">3</div></div>
+        <div class="app-stat"><div class="s-label">Streamlit Tabs</div><div class="s-value">7</div></div>
+      </div>
+      <div class="app-tech">
+        <span class="tech-tag native">Native App</span>
+        <span class="tech-tag">Streamlit</span>
+        <span class="tech-tag">FHIR R4</span>
+        <span class="tech-tag">HL7v2</span>
+        <span class="tech-tag">OMOP CDM v5.4</span>
+        <span class="tech-tag">Tuva Input Layer</span>
+        <span class="tech-tag">OHDSI Athena</span>
+      </div>
+      <div class="app-links">
+        <a class="app-link primary" href="https://github.com/JacinthLaval/tuva-fhir-to-omop-app" target="_blank">&#128193; GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- === OncoLook === -->
+<div class="app-card">
+  <div class="app-top">
+    <div class="app-accent red"></div>
+    <div class="app-content">
+      <div class="app-header">
+        <div class="app-icon">&#128300;</div>
+        <div class="app-title-block">
+          <h3>OncoLook Digital Pathology</h3>
+          <p class="app-tagline">GPU-accelerated histopathology analysis with FDA regulatory doc generation</p>
+        </div>
+        <span class="app-status running">3 SPCS Services</span>
+      </div>
+      <p class="app-desc">A three-service digital pathology platform on SPCS. The GPU inference service runs ResNet18 with Grad-CAM heatmap generation on A10G. The Streamlit pathologist UI provides FHIR-style patient lookup, slide upload, and inference visualization. The React Admin console generates FDA regulatory documents (21 CFR Part 11 audit trail, model cards, bias analysis, PCCP templates) and provides live model registry and inference analytics from Snowflake.</p>
+      <div class="app-stats-row">
+        <div class="app-stat"><div class="s-label">SPCS Services</div><div class="s-value">3</div></div>
+        <div class="app-stat"><div class="s-label">WSI Tiles</div><div class="s-value">500</div></div>
+        <div class="app-stat"><div class="s-label">Audit Events</div><div class="s-value">54</div></div>
+        <div class="app-stat"><div class="s-label">FDA Doc Types</div><div class="s-value">6</div></div>
+      </div>
+      <div class="app-tech">
+        <span class="tech-tag gpu">GPU A10G</span>
+        <span class="tech-tag spcs">SPCS &times;3</span>
+        <span class="tech-tag ml">ResNet18 + Grad-CAM</span>
+        <span class="tech-tag">Streamlit</span>
+        <span class="tech-tag">React</span>
+        <span class="tech-tag">FHIR Patient Lookup</span>
+        <span class="tech-tag gov">21 CFR Part 11</span>
+      </div>
+      <div class="app-links">
+        <a class="app-link secondary" href="https://jacinthlaval.github.io/CoCo-playbook/snowwork_portfolio.html" target="_blank">&#128196; See in Portfolio</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- === FHIR Ingestion Manager === -->
+<div class="app-card">
+  <div class="app-top">
+    <div class="app-accent teal"></div>
+    <div class="app-content">
+      <div class="app-header">
+        <div class="app-icon">&#128257;</div>
+        <div class="app-title-block">
+          <h3>FHIR Ingestion Manager</h3>
+          <p class="app-tagline">Clinical interoperability pipeline with Snowflake Postgres hot landing zone</p>
+        </div>
+        <span class="app-status running">SPCS + Postgres</span>
+      </div>
+      <p class="app-desc">Full interoperability pipeline combining Snowflake Postgres as a hot landing zone with a React SPCS app for monitoring and management. Parses FHIR R4, HL7v2, and CSV formats, transforms to OMOP CDM, and scores data quality (92.3% completeness, 99.3% conformance, 99.7% plausibility). Includes auto-suspend system for the Postgres instance.</p>
+      <div class="app-stats-row">
+        <div class="app-stat"><div class="s-label">Resources</div><div class="s-value">31K</div></div>
+        <div class="app-stat"><div class="s-label">HL7v2 Messages</div><div class="s-value">4K</div></div>
+        <div class="app-stat"><div class="s-label">Stored Procs</div><div class="s-value">8</div></div>
+        <div class="app-stat"><div class="s-label">UDTFs</div><div class="s-value">3</div></div>
+      </div>
+      <div class="app-tech">
+        <span class="tech-tag spcs">SPCS</span>
+        <span class="tech-tag">Snowflake Postgres</span>
+        <span class="tech-tag">React</span>
+        <span class="tech-tag">FHIR R4</span>
+        <span class="tech-tag">HL7v2</span>
+        <span class="tech-tag">OMOP Transform</span>
+      </div>
+      <div class="app-links">
+        <a class="app-link secondary" href="https://jacinthlaval.github.io/CoCo-playbook/snowwork_portfolio.html" target="_blank">&#128196; See in Portfolio</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- === TEFCA Consent === -->
+<div class="app-card">
+  <div class="app-top">
+    <div class="app-accent gold"></div>
+    <div class="app-content">
+      <div class="app-header">
+        <div class="app-icon">&#128274;</div>
+        <div class="app-title-block">
+          <h3>TEFCA Patient Consent Framework</h3>
+          <p class="app-tagline">Consent-driven EHR sharing under TEFCA QTF v2.0 with full governance</p>
+        </div>
+        <span class="app-status deployed">Deployed</span>
+      </div>
+      <p class="app-desc">Patient consent portal with QHIN governance broker implementing the TEFCA Qualified Trust Framework v2.0. Row Access Policies enforce per-category consent decisions, with dynamic masking for PII fields and a complete audit trail. Three React apps (patient portal, provider view, QHIN admin) and the IACP consent model.</p>
+      <div class="app-stats-row">
+        <div class="app-stat"><div class="s-label">EHR Records</div><div class="s-value">1.8M</div></div>
+        <div class="app-stat"><div class="s-label">Consent Categories</div><div class="s-value">8</div></div>
+        <div class="app-stat"><div class="s-label">React Apps</div><div class="s-value">3</div></div>
+        <div class="app-stat"><div class="s-label">Exchange Purposes</div><div class="s-value">7</div></div>
+      </div>
+      <div class="app-tech">
+        <span class="tech-tag">React &times;3</span>
+        <span class="tech-tag gov">Row Access Policies</span>
+        <span class="tech-tag gov">Dynamic Masking</span>
+        <span class="tech-tag">TEFCA QTF v2.0</span>
+        <span class="tech-tag">IACP Model</span>
+        <span class="tech-tag">Audit Trail</span>
+      </div>
+      <div class="app-links">
+        <a class="app-link secondary" href="https://jacinthlaval.github.io/CoCo-playbook/snowwork_portfolio.html" target="_blank">&#128196; See in Portfolio</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- === Ontology Stack === -->
+<div class="app-card">
+  <div class="app-top">
+    <div class="app-accent warm"></div>
+    <div class="app-content">
+      <div class="app-header">
+        <div class="app-icon">&#129504;</div>
+        <div class="app-title-block">
+          <h3>Ontology Stack &amp; Knowledge Graph</h3>
+          <p class="app-tagline">130K-node knowledge graph with semantic views and Cortex Agent &mdash; generated from schema discovery</p>
+        </div>
+        <span class="app-status deployed">Deployed</span>
+      </div>
+      <p class="app-desc">A complete 7-phase ontology-on-Snowflake stack generated from the existing OMOP CDM and FHIR schemas. 37 ontology classes, 70+ abstract and concrete views, up to 3 semantic models, and a Cortex Agent that routes natural language questions to the right semantic model. Graph analytics via stored procedures and UDFs (centrality, community detection, shortest path).</p>
+      <div class="app-stats-row">
+        <div class="app-stat"><div class="s-label">KG Nodes</div><div class="s-value">130K</div></div>
+        <div class="app-stat"><div class="s-label">Ontology Classes</div><div class="s-value">37</div></div>
+        <div class="app-stat"><div class="s-label">Views</div><div class="s-value">70+</div></div>
+        <div class="app-stat"><div class="s-label">Graph UDFs</div><div class="s-value">4</div></div>
+      </div>
+      <div class="app-tech">
+        <span class="tech-tag">Knowledge Graph</span>
+        <span class="tech-tag">Semantic Views</span>
+        <span class="tech-tag">Cortex Agent</span>
+        <span class="tech-tag">Schema Discovery</span>
+        <span class="tech-tag">6 Stored Procs</span>
+      </div>
+      <div class="app-links">
+        <a class="app-link secondary" href="https://jacinthlaval.github.io/CoCo-playbook/snowwork_portfolio.html" target="_blank">&#128196; See in Portfolio</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>
+
+<!-- === THE PATTERN === -->
+<section>
+  <div class="callout">
+    <strong>Every app on this page was built by one person + CoCo.</strong> The GitHub repos contain the full source code, commit history, and documentation. The SPCS services are live on Snowflake infrastructure. The Native App is published and versioned. This isn't a demo &mdash; it's a portfolio of production-grade software built at startup speed with enterprise-grade governance.
+  </div>
+</section>
+
+<!-- === CTA === -->
+<div class="cta">
+  <h2>From Concept to Deployed Software &mdash; In Days</h2>
+  <p>Each application represents a complete solution: data model, business logic, security, deployment, and documentation. CoCo accelerates every layer of the stack.</p>
+</div>
+
+</div>
+</body>
+</html>
