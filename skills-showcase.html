@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoCo Skills Showcase — Reusable Patterns That Compound</title>
+<style>
+  :root {
+    --sf-blue: #1B4F72;
+    --sf-accent: #29B5E8;
+    --sf-light: #EBF5FB;
+    --gold: #d4a017;
+    --red: #C0392B;
+    --green: #27AE60;
+    --warm: #E67E22;
+    --teal: #16a085;
+    --purple: #6C5CE7;
+    --bg: #FAFBFC;
+    --card: #FFFFFF;
+    --text: #2C3E50;
+    --muted: #7F8C8D;
+    --border: #E0E0E0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+  .hero {
+    background: linear-gradient(135deg, #1B4F72 0%, #1a3c5e 40%, #6C5CE7 100%);
+    color: white; padding: 64px 40px 48px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 50px;
+    background: var(--bg); clip-path: ellipse(55% 100% at 50% 100%);
+  }
+  .hero h1 { font-size: 2.4em; font-weight: 300; letter-spacing: -0.5px; margin-bottom: 8px; }
+  .hero h1 strong { font-weight: 700; }
+  .hero .subtitle { font-size: 1.1em; opacity: 0.9; max-width: 720px; margin: 0 auto 18px; }
+  .hero .badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .hero .badge {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px; padding: 4px 14px; font-size: 0.8em; backdrop-filter: blur(4px);
+  }
+
+  .container { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 40px 0; }
+  section + section { border-top: 1px solid var(--border); }
+
+  h2 { font-size: 1.45em; color: var(--sf-blue); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  h2 .icon { font-size: 1.1em; }
+  h3 { font-size: 1.05em; color: var(--sf-blue); margin: 20px 0 8px; }
+  p { margin-bottom: 12px; font-size: 0.93em; }
+
+  .callout {
+    border-left: 4px solid var(--purple); background: linear-gradient(135deg, #f3f0ff 0%, #fff 100%);
+    border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 18px 0; font-size: 0.9em;
+  }
+  .callout strong { color: var(--sf-blue); }
+
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin: 18px 0; }
+  .stat-box {
+    background: var(--card); border-radius: 10px; padding: 16px; text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid var(--border);
+  }
+  .stat-box .number { font-size: 1.9em; font-weight: 800; line-height: 1.1; }
+  .stat-box .number.blue { color: var(--sf-accent); }
+  .stat-box .number.green { color: var(--green); }
+  .stat-box .number.gold { color: var(--gold); }
+  .stat-box .number.purple { color: var(--purple); }
+  .stat-box .label { font-size: 0.78em; color: var(--muted); margin-top: 3px; }
+
+  .skill-card {
+    background: var(--card); border-radius: 12px; padding: 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid var(--border);
+    margin-bottom: 24px; position: relative; overflow: hidden;
+  }
+  .skill-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  }
+  .skill-card.security::before { background: linear-gradient(90deg, var(--red), var(--warm)); }
+  .skill-card.data::before { background: linear-gradient(90deg, var(--green), var(--teal)); }
+  .skill-card.infra::before { background: linear-gradient(90deg, var(--sf-accent), var(--sf-blue)); }
+  .skill-card.healthcare::before { background: linear-gradient(90deg, var(--purple), var(--sf-accent)); }
+  .skill-card.testing::before { background: linear-gradient(90deg, var(--gold), var(--warm)); }
+  .skill-card.knowledge::before { background: linear-gradient(90deg, var(--teal), var(--green)); }
+
+  .skill-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 14px; }
+  .skill-icon { font-size: 2em; line-height: 1; flex-shrink: 0; }
+  .skill-meta { flex: 1; }
+  .skill-meta h3 { margin: 0 0 4px; font-size: 1.15em; color: var(--sf-blue); }
+  .skill-meta .skill-tagline { font-size: 0.88em; color: var(--muted); margin: 0; font-style: italic; }
+  .skill-category {
+    font-size: 0.7em; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    padding: 3px 10px; border-radius: 10px; white-space: nowrap;
+  }
+  .skill-category.security { background: #FDEDEC; color: var(--red); }
+  .skill-category.data { background: #E8F8F5; color: var(--teal); }
+  .skill-category.infra { background: var(--sf-light); color: var(--sf-blue); }
+  .skill-category.healthcare { background: #EDE7F6; color: var(--purple); }
+  .skill-category.testing { background: #FEF9E7; color: #B7950B; }
+  .skill-category.knowledge { background: #E8F5E9; color: var(--green); }
+
+  .skill-body p { font-size: 0.88em; color: #444; margin-bottom: 10px; }
+  .skill-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+  .skill-detail {
+    background: #f8f9fa; border-radius: 8px; padding: 12px 14px;
+  }
+  .skill-detail .dt { font-size: 0.72em; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .skill-detail .dd { font-size: 0.84em; color: var(--text); font-weight: 500; }
+
+  .skill-triggers { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .trigger-tag {
+    font-size: 0.7em; padding: 2px 9px; border-radius: 10px; font-weight: 600;
+    background: var(--sf-light); color: var(--sf-blue);
+  }
+
+  .arch-diagram {
+    background: #1a1a2e; color: #e0e0e0; border-radius: 8px; padding: 16px 20px;
+    font-family: 'Consolas', 'Courier New', monospace; font-size: 0.78em;
+    line-height: 1.5; overflow-x: auto; margin: 12px 0;
+    white-space: pre;
+  }
+  .arch-diagram .hl { color: var(--sf-accent); }
+  .arch-diagram .hl2 { color: #a29bfe; }
+  .arch-diagram .hl3 { color: #55efc4; }
+
+  .origin-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.72em; padding: 3px 10px; border-radius: 10px;
+    background: #FFF3E0; color: var(--warm); font-weight: 600; margin-top: 6px;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.82em; margin: 14px 0; }
+  th { background: var(--sf-blue); color: white; font-weight: 600; text-align: left; padding: 8px 12px; }
+  td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  tr:nth-child(even) { background: #f7f9fc; }
+
+  .cta {
+    background: linear-gradient(135deg, #1B4F72, #6C5CE7); color: white;
+    border-radius: 12px; padding: 32px; text-align: center; margin: 30px 0 10px;
+  }
+  .cta h2 { color: white; justify-content: center; margin-bottom: 8px; }
+  .cta p { color: rgba(255,255,255,0.9); font-size: 0.95em; }
+
+  @media (max-width: 700px) {
+    .hero h1 { font-size: 1.8em; }
+    .stat-row { grid-template-columns: repeat(2, 1fr); }
+    .skill-detail-grid { grid-template-columns: 1fr; }
+    .skill-header { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>CoCo <strong>Skills</strong> Showcase</h1>
+  <p class="subtitle">Reusable patterns extracted from real builds and encoded as CLI skills &mdash; so the next project starts where the last one left off</p>
+  <div class="badges">
+    <span class="badge">Cortex Code CLI</span>
+    <span class="badge">~/.snowflake/cortex/skills/</span>
+    <span class="badge">Shareable &amp; Composable</span>
+    <span class="badge">Healthcare &amp; General Purpose</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- === WHAT ARE SKILLS === -->
+<section>
+  <h2><span class="icon">&#128161;</span> What Is a CoCo Skill?</h2>
+  <div class="callout">
+    <strong>A skill is a reusable instruction set</strong> that lives inside the Cortex Code CLI. When you say <code>"build me a FHIR-to-OMOP app"</code>, the CLI loads the matching skill &mdash; complete with architecture patterns, known pitfalls, tested code templates, and a gated workflow &mdash; and guides you through a production-quality build in minutes instead of days.<br><br>
+    Skills are just Markdown files in <code>~/.snowflake/cortex/skills/</code>. You can zip one up, push it to GitHub, or hand it to a teammate. Every hard-won lesson from a real build gets encoded once and reused forever.<br><br>
+    <strong>The compounding effect:</strong> Each project we built produced one or more skills. Each new project consumed existing skills <em>and</em> produced new ones. By skill #7, new builds start 10&times; faster because they stand on the shoulders of every previous build.
+  </div>
+</section>
+
+<!-- === BY THE NUMBERS === -->
+<section>
+  <h2><span class="icon">&#128200;</span> By the Numbers</h2>
+  <div class="stat-row">
+    <div class="stat-box"><div class="number purple">7</div><div class="label">Skills Created</div></div>
+    <div class="stat-box"><div class="number blue">4</div><div class="label">Categories</div></div>
+    <div class="stat-box"><div class="number green">40+</div><div class="label">Reference Files</div></div>
+    <div class="stat-box"><div class="number gold">3</div><div class="label">Projects That Consumed Skills</div></div>
+  </div>
+</section>
+
+<!-- === SKILL CARDS === -->
+<section>
+  <h2><span class="icon">&#128736;</span> The Skills</h2>
+
+  <!-- 1. Agent Guardrails -->
+  <div class="skill-card security">
+    <div class="skill-header">
+      <div class="skill-icon">&#128737;</div>
+      <div class="skill-meta">
+        <h3>Agent Guardrails</h3>
+        <p class="skill-tagline">Defense-in-depth for AI agents that should never modify data</p>
+      </div>
+      <span class="skill-category security">Security</span>
+    </div>
+    <div class="skill-body">
+      <p>Three independent layers of protection for Cortex Agent and MCP Server applications. If one layer fails, the others still catch it. Battle-tested on the healthcare Precision Advisor app where AI queries run against sensitive clinical data.</p>
+      <div class="arch-diagram"><span class="hl">Layer 1: Snowflake Role</span>  &rarr; SELECT-only grants, platform-enforced
+<span class="hl2">Layer 2: API Validator</span>    &rarr; Regex blocklist strips DML/DDL before execution
+<span class="hl3">Layer 3: UI Confirmation</span>  &rarr; Human sees SQL, clicks Execute or Reject</div>
+      <div class="skill-detail-grid">
+        <div class="skill-detail"><div class="dt">What It Builds</div><div class="dd">Read-only role, SQL validator function, UI confirm/reject flow</div></div>
+        <div class="skill-detail"><div class="dt">Origin Project</div><div class="dd">Precision Advisor / ER Console &mdash; healthcare MCP app</div></div>
+        <div class="skill-detail"><div class="dt">Reused By</div><div class="dd">Ontology Stack Builder agent, FIMR Research Agent</div></div>
+        <div class="skill-detail"><div class="dt">Key Patterns</div><div class="dd">RBAC role creation, regex blocklist, Streamlit/React confirm flow</div></div>
+      </div>
+      <div class="skill-triggers"><span class="trigger-tag">guardrails</span><span class="trigger-tag">agent security</span><span class="trigger-tag">read-only agent</span><span class="trigger-tag">block DML</span><span class="trigger-tag">human-in-the-loop</span></div>
+      <div class="origin-badge">&#128197; Created Week 2 &mdash; April 2, 2026</div>
+    </div>
+  </div>
+
+  <!-- 2. Synthetic Data Generator -->
+  <div class="skill-card data">
+    <div class="skill-header">
+      <div class="skill-icon">&#127922;</div>
+      <div class="skill-meta">
+        <h3>Synthetic Data Generator</h3>
+        <p class="skill-tagline">Realistic test data at scale &mdash; with controlled distributions and referential integrity</p>
+      </div>
+      <span class="skill-category data">Data Engineering</span>
+    </div>
+    <div class="skill-body">
+      <p>Generates statistically realistic datasets and bulk-loads them into Snowflake. Supports configurable distributions (e.g., mortality rates by county, demographic breakdowns), temporal trends, foreign keys, and reproducible seeds. Used to populate the MS FIMR dataset with 100K patients and 3.4M clinical records.</p>
+      <div class="arch-diagram"><span class="hl">CONFIG</span> (rates, distributions, constraints)
+  &darr;
+<span class="hl2">HELPERS</span> (weighted picks, date gen, ID sequences)
+  &darr;
+<span class="hl3">GENERATOR CLASS</span> (stateful, accumulates rows as dicts)
+  &darr;
+<span class="hl">BULK LOADER</span> (write_pandas per table)
+  &darr;
+<span class="hl2">VERIFICATION</span> (count queries, distribution checks)</div>
+      <div class="skill-detail-grid">
+        <div class="skill-detail"><div class="dt">What It Builds</div><div class="dd">Python generator script + Snowflake bulk load pipeline</div></div>
+        <div class="skill-detail"><div class="dt">Origin Project</div><div class="dd">MS FIMR &mdash; 100K patients, 82 counties, SDOH fusion</div></div>
+        <div class="skill-detail"><div class="dt">Reused By</div><div class="dd">OncoLook (50 patients, 500 tiles), TEFCA (1.8M EHR records), TRE (OMOP CDM seed)</div></div>
+        <div class="skill-detail"><div class="dt">Key Patterns</div><div class="dd">random.seed(42), sequential IDs, write_pandas, temporal allocation dicts</div></div>
+      </div>
+      <div class="skill-triggers"><span class="trigger-tag">synthetic data</span><span class="trigger-tag">generate data</span><span class="trigger-tag">test dataset</span><span class="trigger-tag">populate tables</span><span class="trigger-tag">bulk load</span></div>
+      <div class="origin-badge">&#128197; Created Week 2 &mdash; April 3, 2026</div>
+    </div>
+  </div>
+
+  <!-- 3. SPCS SPA Auth -->
+  <div class="skill-card infra">
+    <div class="skill-header">
+      <div class="skill-icon">&#128272;</div>
+      <div class="skill-meta">
+        <h3>SPCS SPA Auth</h3>
+        <p class="skill-tagline">The authentication pattern that makes SPCS web apps actually work</p>
+      </div>
+      <span class="skill-category infra">Infrastructure</span>
+    </div>
+    <div class="skill-body">
+      <p>Documents the only working pattern for SPAs on Snowpark Container Services to query Snowflake data. The SPCS service token does <em>not</em> work with the SQL REST API &mdash; you must use a Python backend with <code>snowflake-connector-python</code> and the auto-injected OAuth token. This skill encodes 3 days of hard-won debugging into a 5-minute scaffold.</p>
+      <div class="arch-diagram">Browser &rarr; <span class="hl">SPCS Ingress</span> &rarr; nginx:8080 &rarr; SPA static files
+                                         &rarr; <span class="hl2">/api/*</span> proxy &rarr; <span class="hl3">Flask:8085</span>
+                                                               &darr;
+                                              snowflake-connector-python
+                                              auth: <span class="hl">/snowflake/session/token</span>
+                                              authenticator: <span class="hl2">'oauth'</span></div>
+      <div class="skill-detail-grid">
+        <div class="skill-detail"><div class="dt">What It Builds</div><div class="dd">nginx + Flask + React scaffold with working SPCS auth</div></div>
+        <div class="skill-detail"><div class="dt">Origin Project</div><div class="dd">FIMR Dashboard &mdash; first React SPA on SPCS</div></div>
+        <div class="skill-detail"><div class="dt">Reused By</div><div class="dd">OncoLook Admin, FHIR Ingestion Manager, TEFCA Consent Portal, Ambient Scribe</div></div>
+        <div class="skill-detail"><div class="dt">Critical Pitfall</div><div class="dd">NEVER set SNOWFLAKE_HOST or SNOWFLAKE_ACCOUNT env vars &mdash; SPCS auto-injects internal values</div></div>
+      </div>
+      <div class="skill-triggers"><span class="trigger-tag">SPCS app</span><span class="trigger-tag">SPA on SPCS</span><span class="trigger-tag">container auth</span><span class="trigger-tag">SPCS token</span><span class="trigger-tag">deploy React</span></div>
+      <div class="origin-badge">&#128197; Created Week 2 &mdash; April 4, 2026</div>
+    </div>
+  </div>
+
+  <!-- 4. SPCS React Agent -->
+  <div class="skill-card infra">
+    <div class="skill-header">
+      <div class="skill-icon">&#9881;</div>
+      <div class="skill-meta">
+        <h3>SPCS React Agent</h3>
+        <p class="skill-tagline">Full-stack React dashboard on SPCS with Cortex Agent wired in</p>
+      </div>
+      <span class="skill-category infra">Infrastructure</span>
+    </div>
+    <div class="skill-body">
+      <p>Extends the SPA Auth pattern with a complete React dashboard scaffold that includes Cortex Agent integration via <code>DATA_AGENT_RUN</code>. Handles the non-obvious response format differences, Docker build patterns, ALTER SERVICE for zero-downtime updates, and the nginx reverse proxy configuration.</p>
+      <div class="arch-diagram"><span class="hl">SPCS Container</span>
+  &#9484;&#9472; <span class="hl2">nginx</span> (port 8080) &#9472;&#9472; / &rarr; React SPA build
+  &#9474;                        &#9492;&#9472; /api/ &rarr; proxy to Flask
+  &#9492;&#9472; <span class="hl3">Flask</span> (port 8085)
+       /api/v2/statements &rarr; SQL execution
+       /api/v2/cortex/agent:run &rarr; <span class="hl">DATA_AGENT_RUN</span>
+       snowflake-connector-python + SPCS OAuth</div>
+      <div class="skill-detail-grid">
+        <div class="skill-detail"><div class="dt">What It Builds</div><div class="dd">React SPA + Flask + nginx + Cortex Agent integration + Dockerfile + SPCS spec</div></div>
+        <div class="skill-detail"><div class="dt">Origin Project</div><div class="dd">MS FIMR Dashboard &mdash; county choropleth + Research Agent</div></div>
+        <div class="skill-detail"><div class="dt">Reused By</div><div class="dd">OncoLook Admin, FHIR Ingestion Manager</div></div>
+        <div class="skill-detail"><div class="dt">Key Patterns</div><div class="dd">DATA_AGENT_RUN response parsing, ALTER SERVICE (not DROP+CREATE), linux/amd64</div></div>
+      </div>
+      <div class="skill-triggers"><span class="trigger-tag">SPCS React</span><span class="trigger-tag">SPA dashboard</span><span class="trigger-tag">Flask SPCS</span><span class="trigger-tag">DATA_AGENT_RUN</span><span class="trigger-tag">Cortex Agent</span></div>
+      <div class="origin-badge">&#128197; Created Week 3 &mdash; April 5, 2026</div>
+    </div>
+  </div>
+
+  <!-- 5. Ontology Stack Builder -->
+  <div class="skill-card knowledge">
+    <div class="skill-header">
+      <div class="skill-icon">&#128300;</div>
+      <div class="skill-meta">
+        <h3>Ontology Stack Builder</h3>
+        <p class="skill-tagline">From relational tables to knowledge graph, semantic views, and Cortex Agent &mdash; in one conversation</p>
+      </div>
+      <span class="skill-category knowledge">Knowledge Engineering</span>
+    </div>
+    <div class="skill-body">
+      <p>Generates a complete 5-layer ontology-on-Snowflake stack from any relational schema and a set of business questions. Discovers entities, builds abstract views, creates up to 3 semantic models, wires a Cortex Agent for intelligent query routing, and optionally adds graph analytics (centrality, community detection, shortest path).</p>
+      <div class="arch-diagram"><span class="hl3">Layer 5</span>: Cortex Agent (intent routing across semantic models + graph tools)
+<span class="hl2">Layer 4</span>: Semantic Models (KG concrete, Ontology abstract, Metadata governance)
+<span class="hl">Layer 3</span>: Generated Abstract Views (VW_ONT_* via stored procedure)
+<span class="hl2">Layer 2</span>: Ontology Metadata (~22 ONT_* tables: classes, properties, rules)
+<span class="hl3">Layer 1</span>: Physical Storage (existing tables, KG_NODE/KG_EDGE)</div>
+      <div class="skill-detail-grid">
+        <div class="skill-detail"><div class="dt">What It Builds</div><div class="dd">22 metadata tables, 70+ views, semantic models, Cortex Agent config, graph UDFs</div></div>
+        <div class="skill-detail"><div class="dt">Origin</div><div class="dd">Adopted from a colleague, then battle-tested on OMOP CDM + FHIR data</div></div>
+        <div class="skill-detail"><div class="dt">Scale Achieved</div><div class="dd">130K knowledge graph nodes, 37 ontology classes, 6 stored procedures</div></div>
+        <div class="skill-detail"><div class="dt">Workflow</div><div class="dd">7-phase gated: Gather &rarr; Discover &rarr; Ontology &rarr; Views &rarr; Semantic &rarr; Agent &rarr; Graph</div></div>
+      </div>
+      <div class="skill-triggers"><span class="trigger-tag">ontology</span><span class="trigger-tag">knowledge graph</span><span class="trigger-tag">semantic model</span><span class="trigger-tag">Cortex Agent</span><span class="trigger-tag">schema discovery</span></div>
+      <div class="origin-badge">&#128197; Adopted Week 4 &mdash; Battle-tested April 2026</div>
+    </div>
+  </div>
+
+  <!-- 6. App Testing -->
+  <div class="skill-card testing">
+    <div class="skill-header">
+      <div class="skill-icon">&#128295;</div>
+      <div class="skill-meta">
+        <h3>App Testing</h3>
+        <p class="skill-tagline">Graduated testing &mdash; start small, validate, then scale with confidence</p>
+      </div>
+      <span class="skill-category testing">Quality Assurance</span>
+    </div>
+    <div class="skill-body">
+      <p>A three-level testing framework that prevents expensive failures. Level 1 proves the pipeline runs (1 record). Level 2 validates proportional output (10 records). A <strong>mandatory pause</strong> forces review before Level 3 runs at full scale. Extracted from the FHIR-to-OMOP test suite after we learned that skipping straight to 1,000 bundles wastes time and compute.</p>
+      <div class="arch-diagram"><span class="hl">Level 1</span> (Smoke)     1 record   &rarr; Does it run?
+     &darr;
+<span class="hl2">Level 2</span> (Validate)  10 records &rarr; Are outputs proportional?
+     &darr;
+  <span class="hl3">&#9888; MANDATORY PAUSE</span>     &rarr; Review results, get approval
+     &darr;
+<span class="hl">Level 3</span> (Scale)     Full data  &rarr; Ground truth comparison (&plusmn;10%)</div>
+      <div class="skill-detail-grid">
+        <div class="skill-detail"><div class="dt">What It Builds</div><div class="dd">Test script with --level flag, dedicated test schema, auto-cleanup</div></div>
+        <div class="skill-detail"><div class="dt">Origin Project</div><div class="dd">FHIR-to-OMOP Transformer &mdash; graduated bundle testing</div></div>
+        <div class="skill-detail"><div class="dt">Reused By</div><div class="dd">OncoLook inference pipeline, Ontology Stack Builder validation</div></div>
+        <div class="skill-detail"><div class="dt">Key Insight</div><div class="dd">The pause between Level 2 and 3 prevents 90% of expensive test failures</div></div>
+      </div>
+      <div class="skill-triggers"><span class="trigger-tag">test</span><span class="trigger-tag">validate</span><span class="trigger-tag">smoke test</span><span class="trigger-tag">graduated test</span><span class="trigger-tag">scale up testing</span></div>
+      <div class="origin-badge">&#128197; Created Week 5 &mdash; April 13, 2026</div>
+    </div>
+  </div>
+
+  <!-- 7. FHIR-to-OMOP Native App -->
+  <div class="skill-card healthcare">
+    <div class="skill-header">
+      <div class="skill-icon">&#127973;</div>
+      <div class="skill-meta">
+        <h3>FHIR-to-OMOP Native App Builder</h3>
+        <p class="skill-tagline">The most complex skill &mdash; encodes an entire healthcare data platform into a repeatable recipe</p>
+      </div>
+      <span class="skill-category healthcare">Healthcare</span>
+    </div>
+    <div class="skill-body">
+      <p>Builds a complete Snowflake Native App that transforms FHIR R4 (JSON + XML) and HL7v2 messages into OMOP CDM v5.4 or Tuva Input Layer tables. Encodes 23 OMOP mappers, 13 Tuva mappers, vocabulary seed patterns from OHDSI Athena, Streamlit UI with 7 tabs, and all the Snowflake-specific gotchas (CTE patterns, manifest v2, SiS runtime limitations, release channel workflows).</p>
+      <div class="arch-diagram">FHIR R4 / HL7v2 &rarr; <span class="hl">Auto-detect Parser</span> &rarr; fhir_resources staging
+   &darr;
+<span class="hl2">23 OMOP Mappers</span> &rarr; 17 OMOP CDM v5.4 output tables
+   OR
+<span class="hl3">13 Tuva Mappers</span> &rarr; 13 Tuva Input Layer tables
+   +
+<span class="hl">Vocabulary</span>: LOINC, SNOMED, RxNorm, ICD-10, CPT, HCPCS, CVX
+   +
+<span class="hl2">Streamlit</span>: Configure, Run, History, Vocab, Coverage, Quality, Explore</div>
+      <div class="skill-detail-grid">
+        <div class="skill-detail"><div class="dt">What It Builds</div><div class="dd">Complete Native App: manifest, setup scripts, 36 mapper procs, Streamlit UI, tests</div></div>
+        <div class="skill-detail"><div class="dt">Origin Project</div><div class="dd">Tuva FHIR-to-OMOP Transformer &mdash; V1.5, Marketplace-ready</div></div>
+        <div class="skill-detail"><div class="dt">Sub-Skills Used</div><div class="dd">App Testing (graduated), native-app-provider (bundled, for deploy/version lifecycle)</div></div>
+        <div class="skill-detail"><div class="dt">Reference Files</div><div class="dd">SKILL.md + 4 references (omop-schema, mapping-patterns, sis-constraints, deployment) + 4 templates</div></div>
+      </div>
+      <div class="skill-triggers"><span class="trigger-tag">FHIR to OMOP</span><span class="trigger-tag">HL7v2</span><span class="trigger-tag">healthcare native app</span><span class="trigger-tag">OMOP CDM</span><span class="trigger-tag">Tuva</span></div>
+      <div class="origin-badge">&#128197; Created Week 5 &mdash; April 15, 2026</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- === COMPOUNDING EFFECT === -->
+<section>
+  <h2><span class="icon">&#128640;</span> The Compounding Effect</h2>
+  <p>Skills don't just save time &mdash; they compound. Each new project starts faster because it inherits the hard-won lessons of every previous build.</p>
+  <table>
+    <tr><th>Project</th><th>Skills Consumed</th><th>Skills Produced</th></tr>
+    <tr><td><strong>Precision Advisor</strong></td><td>&mdash;</td><td>Agent Guardrails</td></tr>
+    <tr><td><strong>MS FIMR</strong></td><td>&mdash;</td><td>Synthetic Data Generator</td></tr>
+    <tr><td><strong>FIMR Dashboard</strong></td><td>&mdash;</td><td>SPCS SPA Auth, SPCS React Agent</td></tr>
+    <tr><td><strong>Ontology Stack Builder</strong></td><td>Agent Guardrails</td><td>Ontology Stack Builder (adopted + hardened)</td></tr>
+    <tr><td><strong>FHIR-to-OMOP Transformer</strong></td><td>App Testing</td><td>FHIR-to-OMOP Native App, App Testing</td></tr>
+    <tr><td><strong>OncoLook</strong></td><td>SPCS SPA Auth, SPCS React Agent, Synthetic Data, App Testing</td><td>&mdash;</td></tr>
+    <tr><td><strong>TEFCA Consent</strong></td><td>Synthetic Data, Agent Guardrails</td><td>&mdash;</td></tr>
+    <tr><td><strong>FHIR Ingestion Manager</strong></td><td>SPCS SPA Auth, SPCS React Agent</td><td>&mdash;</td></tr>
+    <tr><td><strong>Ambient Scribe</strong></td><td>SPCS SPA Auth</td><td>&mdash;</td></tr>
+  </table>
+</section>
+
+<!-- === SHARING === -->
+<section>
+  <h2><span class="icon">&#128230;</span> How to Share Skills</h2>
+  <div class="callout">
+    Skills are portable. A skill is a directory with a <code>SKILL.md</code> file and optional reference docs. To share one:
+    <br><br>
+    <strong>1.</strong> Zip the skill directory: <code>zip -r agent-guardrails.zip ~/.snowflake/cortex/skills/agent-guardrails/</code><br>
+    <strong>2.</strong> Or push to GitHub: any CoCo user clones the repo into their <code>~/.snowflake/cortex/skills/</code> directory<br>
+    <strong>3.</strong> The CLI auto-discovers it &mdash; just use the trigger phrases in conversation<br><br>
+    <strong>No installation, no package manager, no configuration.</strong> Skills are Markdown files that encode expertise. Drop them in the folder and they work.
+  </div>
+</section>
+
+<!-- === CTA === -->
+<div class="cta">
+  <h2>Skills Are How AI Expertise Compounds</h2>
+  <p>Every hard build produces a skill. Every future build starts faster. This is the flywheel &mdash; not just building with AI, but <em>teaching the AI how you build</em>, so it gets better with every project.</p>
+</div>
+
+</div>
+</body>
+</html>
